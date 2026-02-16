@@ -1,0 +1,120 @@
+:root {
+    --bg: #0a0a0a;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.1);
+    --accent: #64ffda; /* Tech Mint */
+    --text-main: #f0f0f0;
+    --text-dim: #999;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Subtle background glow */
+.glow-bg {
+    position: fixed;
+    top: -10%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(100, 255, 218, 0.05) 0%, transparent 70%);
+    z-index: -1;
+}
+
+nav {
+    padding: 2rem 5%;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-content {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand { font-weight: 700; color: var(--accent); }
+
+.links a {
+    text-decoration: none;
+    color: var(--text-dim);
+    margin-left: 2rem;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.links a:hover { color: var(--accent); }
+
+/* Main Layout */
+main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #64ffda, #48cae4);
+    -webkit-text-fill-color: transparent;
+}
+
+.sub-headline {
+    font-size: 1.25rem;
+    color: var(--text-dim);
+    max-width: 600px;
+}
+
+/* Grid & Cards */
+.section { margin-top: 8rem; }
+.section-label { font-size: 0.8rem; text-transform: uppercase; color: var(--accent); letter-spacing: 2px; margin-bottom: 2rem; }
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    border-radius: 12px;
+    transition: 0.4s;
+}
+
+.card:hover { border-color: var(--accent); background: rgba(255, 255, 255, 0.05); }
+
+.card-meta { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.5rem; }
+
+/* Tags */
+.stack-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.tag {
+    padding: 0.4rem 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
