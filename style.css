@@ -3,9 +3,9 @@
    ================================================================ */
 
 :root {
-    --bg: #0a0a0a;
-    --surface: #111111;
-    --surface-hover: #161616;
+    --bg: #e6e6e6;
+    --surface: #b0b0b0;
+    --surface-hover: #b1b1b1;
     --text: #f0f0f0;
     --text-secondary: #b0b0b0;
     --muted: #707070;
