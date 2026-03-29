@@ -1,65 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Name | ML Engineer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Robin Erb</title>
+    <meta name="description" content="M.Sc. Data and Computer Science student at Heidelberg University. Deep Learning, Computer Vision, and scalable Data Science.">
+    <meta name="author" content="Robin Erb">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Robin Erb">
+    <meta property="og:description" content="M.Sc. Data and Computer Science student at Heidelberg University. Deep Learning, Computer Vision, and scalable Data Science.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robinerb.github.io">
+
+    <!-- Twitter/X card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Robin Erb">
+    <meta name="twitter:description" content="M.Sc. Data and Computer Science student at Heidelberg University. Deep Learning, Computer Vision, and scalable Data Science.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="glow-bg"></div>
-    
-    <nav>
-        <div class="nav-content">
-            <span class="brand">~/home</span>
-            <div class="links">
-                <a href="#work">Work</a>
-                <a href="#stack">Stack</a>
-                <a href="mailto:your@email.com" class="btn-sm">Contact</a>
-            </div>
+
+<nav>
+    <div class="container nav-row">
+        <a href="#" class="nav-name">Robin Erb</a>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#publications">Publications</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#cv">CV</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container">
+    <div class="two-col">
+
+        <aside class="sidebar">
+            <img class="headshot" src="photo.jpg" alt="Robin Erb"
+                 onerror="this.style.display='none';document.querySelector('.headshot-placeholder').style.display='flex';">
+            <div class="headshot-placeholder" style="display:none;">RE</div>
+
+            <h1 class="my-name">Robin Erb</h1>
+            <p class="my-title">M.Sc. Data &amp; Computer Science</p>
+
+            <ul class="sidebar-links">
+                <li>📍 Heidelberg, Germany</li>
+                <li><a href="mailto:robin.erb2000@gmail.com">Email</a></li>
+                <li><a href="https://github.com/robinerb" target="_blank">GitHub</a></li>
+                <li><a href="https://linkedin.com/in/robin-erb" target="_blank">LinkedIn</a></li>
+            </ul>
+        </aside>
+
+        <div class="content">
+
+            <section id="about">
+                <h2 class="section-title">About</h2>
+                <p>
+                    I'm a computer science graduate student at Heidelberg University specializing
+                    in Machine Learning, currently on a semester abroad at the University of Copenhagen.
+                    My work spans deep learning, computer vision, and scalable data science. I've built
+                    real-time middleware systems, AI-driven sales automation pipelines, and hybrid
+                    input devices for spatial interaction. I'm passionate about turning research into
+                    production-grade systems.
+                </p>
+                <p class="interests">
+                    <strong>Interests:</strong> Deep Learning, Computer Vision, Human-Computer Interaction,
+                    Cloud Architecture, Data Science
+                </p>
+            </section>
+
+            <section id="experience">
+                <h2 class="section-title">Experience</h2>
+
+                <div class="exp-item">
+                    <h3>Independent Software Developer</h3>
+                    <div class="meta">Automated Middleware &amp; ERP Integration · Lubner Perfumery · Dec 2025 – Present</div>
+                    <p>
+                        Built real-time middleware to sync sales, returns, and inventory between NEO ERP
+                        and Shopify. Automated catalog management including product drafting, publishing,
+                        and archiving. Engineered end-to-end system architecture using Google Cloud Functions
+                        and Firestore.
+                    </p>
+                    <div class="tags">
+                        <span class="tag">Google Cloud</span>
+                        <span class="tag">Firestore</span>
+                        <span class="tag">Shopify API</span>
+                        <span class="tag">Node.js</span>
+                    </div>
+                </div>
+
+                <div class="exp-item">
+                    <h3>Independent Software Developer</h3>
+                    <div class="meta">AI-Driven Sales Automation · 1/2/3 Autoteile · Sep – Nov 2025</div>
+                    <p>
+                        Implemented OCR data extraction for vehicle documents to support an automated
+                        sales pipeline. Assisted in deploying an AI chatbot for inquiries and built
+                        a staff verification dashboard.
+                    </p>
+                    <div class="tags">
+                        <span class="tag">OCR</span>
+                        <span class="tag">AI Chatbot</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">Dashboard</span>
+                    </div>
+                </div>
+
+                <div class="exp-item">
+                    <h3>Student Assistant · HCI Department</h3>
+                    <div class="meta">University of Konstanz · Sep 2023 – Mar 2025</div>
+                    <p>
+                        Developed the "Spatial Mouse" prototype including 3D CAD modeling and
+                        Arduino-based hardware in C with circuit soldering and component assembly.
+                        Built a dedicated virtual test environment in Unity.
+                    </p>
+                    <div class="tags">
+                        <span class="tag">Unity</span>
+                        <span class="tag">Arduino</span>
+                        <span class="tag">CAD</span>
+                        <span class="tag">C</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="education">
+                <h2 class="section-title">Education</h2>
+
+                <div class="edu-item">
+                    <h3>Semester Abroad · <span class="accent">University of Copenhagen</span></h3>
+                    <div class="meta">M.Sc. Computer Science · Feb 2026 – Jul 2026</div>
+                </div>
+
+                <div class="edu-item">
+                    <h3>M.Sc. Data and Computer Science · <span class="accent">Heidelberg University</span></h3>
+                    <div class="meta">Specialization: Machine Learning · GPA: 1.3 · Apr 2025 – Jun 2027</div>
+                </div>
+
+                <div class="edu-item">
+                    <h3>B.Sc. Computer Science · <span class="accent">University of Konstanz</span></h3>
+                    <div class="meta">Specialization: Data Science &amp; HCI · GPA: 1.4 · Oct 2021 – Mar 2025</div>
+                    <p class="thesis-note">Thesis (1.0): Developed a hybrid input device for 2D/3D interaction (Spatial Mouse 2)</p>
+                </div>
+            </section>
+
+            <section id="publications">
+                <h2 class="section-title">Publications</h2>
+
+                <div class="pub-item">
+                    <p>
+                        S. Hubenschmid, J. Zagermann, <strong>R. Erb</strong>, et al.
+                        "SpatialMouse: A Hybrid Pointing Device for Seamless Interaction Across
+                        2D and 3D Spaces." In <em>Proc. of the 31st ACM Symposium on Virtual Reality
+                        Software and Technology (VRST '25)</em>.
+                        <a href="https://doi.org/10.1145/3756884.3766047" target="_blank">DOI: 10.1145/3756884.3766047</a>
+                    </p>
+                </div>
+            </section>
+
+            <section id="projects">
+                <h2 class="section-title">Projects</h2>
+
+                <div class="project-card">
+                    <h3><a href="#">SpatialMouse — Hybrid 2D/3D Pointing Device</a></h3>
+                    <div class="meta">Human-Computer Interaction · Hardware Prototyping</div>
+                    <p>
+                        Designed and built a hybrid input device enabling seamless interaction
+                        across 2D desktop and 3D spatial environments. Combined 3D CAD modeling,
+                        Arduino hardware, and a Unity virtual test environment. Published at VRST '25.
+                    </p>
+                    <div class="tags">
+                        <span class="tag">Arduino</span>
+                        <span class="tag">Unity</span>
+                        <span class="tag">CAD</span>
+                        <span class="tag">HCI</span>
+                        <span class="tag">C</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3><a href="#">Real-Time ERP–Shopify Middleware</a></h3>
+                    <div class="meta">Cloud Architecture · Integration Engineering</div>
+                    <p>
+                        Architected serverless middleware on Google Cloud Functions to synchronize
+                        sales, returns, and inventory data between NEO ERP and Shopify in real time.
+                        Automated the full product lifecycle from drafting to archival.
+                    </p>
+                    <div class="tags">
+                        <span class="tag">Google Cloud</span>
+                        <span class="tag">Firestore</span>
+                        <span class="tag">Shopify</span>
+                        <span class="tag">Serverless</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3><a href="#">AI Sales Pipeline with OCR</a></h3>
+                    <div class="meta">AI Automation · Document Processing</div>
+                    <p>
+                        Built an automated sales pipeline for an auto parts company using OCR
+                        to extract structured data from vehicle documents. Integrated an AI chatbot
+                        for customer inquiries and a staff verification dashboard.
+                    </p>
+                    <div class="tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">OCR</span>
+                        <span class="tag">AI Chatbot</span>
+                        <span class="tag">PyTorch</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills">
+                <h2 class="section-title">Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-group">
+                        <h4>Languages</h4>
+                        <div class="tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Java</span>
+                            <span class="tag">C++</span>
+                            <span class="tag">SQL</span>
+                            <span class="tag">R</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h4>ML &amp; AI</h4>
+                        <div class="tags">
+                            <span class="tag">PyTorch</span>
+                            <span class="tag">Scikit-learn</span>
+                            <span class="tag">Pandas</span>
+                            <span class="tag">OCR</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h4>Cloud &amp; Tools</h4>
+                        <div class="tags">
+                            <span class="tag">Google Cloud</span>
+                            <span class="tag">Firebase</span>
+                            <span class="tag">Docker</span>
+                            <span class="tag">Git</span>
+                            <span class="tag">Unity</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h4>Spoken Languages</h4>
+                        <div class="tags">
+                            <span class="tag">German (Native)</span>
+                            <span class="tag">English (Fluent)</span>
+                            <span class="tag">French (Basic)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="cv">
+                <h2 class="section-title">Curriculum Vitae</h2>
+                <p>A full PDF of my CV is available for download.</p>
+                <a class="cv-btn" href="Robin_Erb_CV.pdf" target="_blank">Download CV (PDF)</a>
+            </section>
+
         </div>
-    </nav>
+    </div>
+</main>
 
-    <main>
-        <section class="hero">
-            <div class="badge">Available for Research & Collabs</div>
-            <h1>Building <span class="gradient-text">Intelligent</span> Systems.</h1>
-            <p class="sub-headline">
-                M.Sc. Student at Heidelberg University. Specializing in Deep Learning, 
-                Computer Vision, and scalable Data Science.
-            </p>
-        </section>
+<!-- hidden elements for easter egg effects -->
+<div id="glitch-overlay"></div>
+<div id="blackout-overlay"></div>
 
-        <section id="stack" class="section">
-            <h2 class="section-label">Selected Tech Stack</h2>
-            <div class="stack-grid">
-                <span class="tag">Python</span>
-                <span class="tag">PyTorch</span>
-                <span class="tag">TensorFlow</span>
-                <span class="tag">SQL</span>
-                <span class="tag">Scikit-learn</span>
-                <span class="tag">Docker</span>
-            </div>
-        </section>
+<div id="tampering-popup">
+    <div class="tampering-inner">
+        <div class="tampering-icon">⚠</div>
+        <div class="tampering-title">Error: Data Tampering</div>
+        <div class="tampering-sub">Unauthorized modification detected.</div>
+    </div>
+</div>
 
-        <section id="work" class="section">
-            <h2 class="section-label">Featured Projects</h2>
-            <div class="grid">
-                <div class="card">
-                    <div class="card-meta">2026 • Machine Learning</div>
-                    <h3>Neural Architecture Search</h3>
-                    <p>Optimizing CNN layers for low-power mobile devices using reinforcement learning.</p>
-                    <div class="card-links"><a href="#">View Paper →</a></div>
-                </div>
-                <div class="card">
-                    <div class="card-meta">2025 • Computer Vision</div>
-                    <h3>Real-time Segmentation</h3>
-                    <p>High-speed autonomous vehicle perception using Transformer-based models.</p>
-                    <div class="card-links"><a href="#">GitHub Repo →</a></div>
-                </div>
-            </div>
-        </section>
-    </main>
+<div id="konami-message">
+    <span>↑↑↓↓←→←→BA</span>
+    <br>
+    You now have 30 lives. Good luck.
+</div>
+
+<div id="corrigibility-banner">
+    A corrigible system would have stopped the first time.
+</div>
+
+<!-- terminal -->
+<div id="terminal-tooltip" class="tooltip-hidden">
+    <span>Interact with this website through the command line!</span>
+    <button id="tooltip-close" onclick="dismissTooltip()">✕</button>
+</div>
+
+<div id="terminal-bar" onclick="openTerminal()">
+    <span class="terminal-prompt">robin@erb:~$</span>
+    <span class="terminal-hint">click to open terminal</span>
+</div>
+
+<div id="terminal-window" class="hidden">
+    <div class="terminal-header">
+        <span>robin@erb — bash</span>
+        <button onclick="closeTerminal()" class="terminal-close">✕</button>
+    </div>
+    <div id="terminal-output"></div>
+    <div class="terminal-input-row">
+        <span class="terminal-prompt">robin@erb:~$ </span>
+        <input type="text" id="terminal-input" autofocus
+               autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
+               onkeydown="if(event.key==='Enter') runCommand(this.value)">
+        <span id="terminal-cursor"></span>
+    </div>
+</div>
+
+<footer>
+    <div class="container">&copy; 2026 Robin Erb</div>
+</footer>
+
+<script src="terminal.js"></script>
+
 </body>
 </html>
