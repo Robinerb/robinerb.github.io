@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+    <!-- Fully URL-encoded SVG Favicon with initials "RE" for Safari compatibility -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Crect%20width%3D'100'%20height%3D'100'%20rx%3D'20'%20fill%3D'%232563eb'%2F%3E%3Ctext%20x%3D'50'%20y%3D'68'%20font-family%3D'sans-serif'%20font-size%3D'45'%20font-weight%3D'bold'%20fill%3D'%23ffffff'%20text-anchor%3D'middle'%3ERE%3C%2Ftext%3E%3C%2Fsvg%3E">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Robin Erb</title>
@@ -22,7 +23,415 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* ================================================================
+           THEMES — Light (Default), Dark, Hacker
+           ================================================================ */
+
+        :root {
+            /* Default Light Theme */
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --surface-hover: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #475569;
+            --muted: #64748b;
+            --accent: #2563eb; 
+            --accent-dim: rgba(37, 99, 235, 0.08);
+            --accent-hover: #1d4ed8;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --tag-bg: #f8fafc;
+            --tag-text: #475569;
+            --tag-border: #cbd5e1;
+            
+            /* Terminal Specific Variables */
+            --term-bg: #0f172a;
+            --term-header: #1e293b;
+            --term-text: #e2e8f0;
+            --term-prompt: #38bdf8;
+            --term-border: #1e293b;
+            --term-muted: #94a3b8;
+
+            --heading-font: 'Outfit', 'Segoe UI', sans-serif;
+            --body-font: 'Outfit', 'Segoe UI', sans-serif;
+            --mono-font: 'JetBrains Mono', 'Consolas', monospace;
+            --max-w: 960px;
+        }
+
+        body.theme-dark {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --text: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --muted: #94a3b8;
+            --accent: #38bdf8; 
+            --accent-dim: rgba(56, 189, 248, 0.1);
+            --accent-hover: #7dd3fc;
+            --border: #334155;
+            --border-hover: #475569;
+            --tag-bg: #0f172a;
+            --tag-text: #e2e8f0;
+            --tag-border: #475569;
+        }
+
+        body.theme-hacker {
+            --bg: #050505;
+            --surface: #0a0a0a;
+            --surface-hover: #111111;
+            --text: #00ff00;
+            --text-secondary: #00cc00;
+            --muted: #007700;
+            --accent: #00ff00; 
+            --accent-dim: rgba(0, 255, 0, 0.1);
+            --accent-hover: #33ff33;
+            --border: #003300;
+            --border-hover: #005500;
+            --tag-bg: #050505;
+            --tag-text: #00ff00;
+            --tag-border: #005500;
+
+            --term-bg: #000000;
+            --term-header: #050505;
+            --term-text: #00ff00;
+            --term-prompt: #00ff00;
+            --term-border: #003300;
+            --term-muted: #007700;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--body-font);
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: 48px;
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-hover); text-decoration: none; }
+
+        .container { max-width: var(--max-w); margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
+
+        /* ================================================================
+           NAV
+           ================================================================ */
+
+        nav {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            opacity: 0.95;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 100;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .nav-row { display: flex; align-items: center; gap: 2.5rem; }
+        .nav-name {
+            font-family: var(--heading-font); font-size: 1.15rem;
+            font-weight: 700; color: var(--text); text-decoration: none;
+            white-space: nowrap; letter-spacing: -0.01em;
+        }
+        .nav-name:hover { text-decoration: none; color: var(--text); }
+        nav ul { list-style: none; display: flex; gap: 1.8rem; }
+        nav ul a { color: var(--muted); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        nav ul a:hover { color: var(--accent); }
+
+        /* ================================================================
+           LAYOUT & SIDEBAR
+           ================================================================ */
+
+        .two-col { display: grid; grid-template-columns: 240px 1fr; gap: 4rem; padding-top: 3.5rem; }
+        .sidebar { position: sticky; top: 5rem; align-self: start; }
+
+        .headshot-placeholder {
+            width: 150px; height: 150px; border-radius: 50%;
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--accent); display: flex; align-items: center;
+            justify-content: center; font-family: var(--heading-font);
+            font-size: 2.5rem; font-weight: 700; margin-bottom: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        .headshot {
+            width: 150px; height: 150px; border-radius: 50%; object-fit: cover;
+            margin-bottom: 1.2rem; border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: border-color 0.3s;
+        }
+
+        .my-name { font-family: var(--heading-font); font-size: 1.5rem; font-weight: 700; line-height: 1.2; color: var(--text); letter-spacing: -0.02em; transition: color 0.3s; }
+        .my-title { font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.5; font-weight: 400; transition: color 0.3s; }
+        .sidebar-links { list-style: none; margin-top: 1.5rem; font-size: 0.9rem; line-height: 2.2; color: var(--text-secondary); transition: color 0.3s; }
+        .sidebar-links a { font-weight: 500; color: var(--accent); transition: color 0.3s; }
+
+        /* ================================================================
+           CONTENT SECTIONS
+           ================================================================ */
+
+        .content section { padding-bottom: 3rem; margin-bottom: 3rem; border-bottom: 1px solid var(--border); transition: border-color 0.3s; }
+        .content section:last-child { border-bottom: none; margin-bottom: 0; }
+        section[id] { scroll-margin-top: 90px; }
+
+        .section-title { font-family: var(--heading-font); font-size: 0.9rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--text); letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
+        .content p { margin-bottom: 1rem; color: var(--text-secondary); transition: color 0.3s; }
+        .content p:last-child { margin-bottom: 0; }
+        .accent { color: var(--accent); font-weight: 500; transition: color 0.3s; }
+        .meta { font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem; transition: color 0.3s; }
+        .interests { font-size: 0.95rem; margin-top: 0.5rem; }
+        .interests strong { color: var(--text); font-weight: 600; transition: color 0.3s; }
+        .thesis-note { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; font-style: italic; }
+
+        /* ================================================================
+           CARDS (Experience, Projects, Education)
+           ================================================================ */
+
+        .edu-item { margin-bottom: 1.5rem; }
+        .edu-item:last-child { margin-bottom: 0; }
+        .edu-item h3 { font-size: 1.1rem; font-weight: 600; color: var(--text); transition: color 0.3s; }
+
+        .exp-item, .project-card, .pub-item {
+            margin-bottom: 1.5rem; padding: 1.5rem; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.2s, box-shadow 0.2s, background 0.3s;
+        }
+        .exp-item:hover, .project-card:hover { border-color: var(--border-hover); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .exp-item:last-child, .project-card:last-child { margin-bottom: 0; }
+
+        .exp-item h3, .project-card h3 { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem; transition: color 0.3s; }
+        .project-card h3 a { color: var(--text); transition: color 0.3s; }
+        .project-card h3 a:hover { color: var(--accent); }
+        .pub-item { border-left: 3px solid var(--accent); transition: border-color 0.3s; }
+        .pub-item strong { color: var(--text); font-weight: 600; transition: color 0.3s; }
+
+        /* ================================================================
+           TAGS & SKILLS
+           ================================================================ */
+
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+        .tag { padding: 0.2rem 0.7rem; background: var(--tag-bg); color: var(--tag-text); font-size: 0.8rem; border-radius: 6px; font-weight: 500; border: 1px solid var(--tag-border); transition: all 0.3s; }
+        .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .skill-group h4 { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; transition: color 0.3s; }
+
+        /* ================================================================
+           BUTTONS & FOOTER
+           ================================================================ */
+
+        .cv-btn {
+            display: inline-block; margin-top: 0.8rem; padding: 0.6rem 1.5rem; background: var(--surface);
+            color: var(--text); font-size: 0.9rem; font-weight: 500; border-radius: 6px;
+            border: 1px solid var(--border); transition: all 0.2s;
+        }
+        .cv-btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        footer { padding: 3rem 0; text-align: center; font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--border); transition: border-color 0.3s, color 0.3s; position: relative; z-index: 10; }
+
+        /* ================================================================
+           TERMINAL
+           ================================================================ */
+
+        #terminal-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 44px;
+            background: var(--surface); color: var(--text-secondary); display: flex; align-items: center;
+            padding: 0 1.5rem; gap: 1rem; font-family: var(--mono-font); font-size: 0.85rem;
+            cursor: pointer; z-index: 200; border-top: 1px solid var(--border);
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.03); transition: background 0.3s, border-color 0.3s;
+        }
+        #terminal-bar:hover { background: var(--surface-hover); }
+        #terminal-bar .terminal-prompt { color: var(--accent); font-weight: 500; transition: color 0.3s; }
+        #terminal-bar .terminal-hint { color: var(--muted); transition: color 0.3s; }
+
+        #terminal-window {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 350px; background: var(--term-bg); color: var(--term-text);
+            font-family: var(--mono-font); font-size: 0.85rem; display: flex;
+            flex-direction: column; z-index: 300; border-top: 1px solid var(--term-border);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.15); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, color 0.3s, border-color 0.3s;
+            cursor: text;
+        }
+        #terminal-window.hidden { transform: translateY(100%); pointer-events: none; }
+        #terminal-window.dragging { transition: none; }
+
+        /* The resizer line at the very top */
+        #terminal-resizer {
+            position: absolute;
+            top: -3px; 
+            left: 0;
+            right: 0;
+            height: 6px;
+            cursor: ns-resize;
+            background: transparent;
+            z-index: 310;
+            transition: background 0.2s;
+        }
+        #terminal-resizer:hover, #terminal-resizer.active {
+            background: var(--accent);
+        }
+
+        .terminal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.5rem 1.2rem; background: var(--term-header); font-size: 0.8rem;
+            color: var(--term-muted); border-bottom: 1px solid var(--term-bg);
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        .terminal-close {
+            background: none; border: none; color: var(--term-muted); font-size: 1rem;
+            cursor: pointer; padding: 0.2rem 0.5rem; transition: color 0.15s;
+        }
+        .terminal-close:hover { color: var(--term-text); }
+
+        #terminal-output { flex: 1; overflow-y: auto; padding: 1rem 1.2rem; white-space: pre-wrap; line-height: 1.6; }
+
+        .terminal-input-row { display: flex; align-items: center; padding: 0.5rem 1.2rem 1rem; gap: 0.5rem; position: relative; }
+        .terminal-input-row .terminal-prompt { color: var(--term-prompt); white-space: nowrap; transition: color 0.3s; }
+
+        #terminal-input {
+            flex: 1; background: transparent; border: none; outline: none;
+            color: var(--term-text); font-family: var(--mono-font); font-size: 0.85rem; caret-color: transparent;
+            transition: color 0.3s;
+        }
+
+        #terminal-cursor {
+            display: inline-block; width: 0.52em; height: 1.15em; background: var(--term-prompt);
+            vertical-align: text-bottom; animation: cursorBlink 1s step-end infinite;
+            pointer-events: none; position: absolute; left: 0; bottom: 1.05rem;
+            transition: background 0.3s;
+        }
+
+        @keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Git Rocket Animation */
+        @keyframes blastOff {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-300px); opacity: 0; }
+        }
+        .rocket-launch {
+            display: inline-block;
+            animation: blastOff 1.5s ease-in forwards;
+            pointer-events: none;
+        }
+
+        /* Glitch Easter Egg */
+        @keyframes glitchEffect {
+            0% { transform: translate(0); filter: drop-shadow(2px 0 0 red) drop-shadow(-2px 0 0 cyan); }
+            20% { transform: translate(-3px, 2px); filter: drop-shadow(-3px 0 0 red) drop-shadow(3px 0 0 cyan); }
+            40% { transform: translate(3px, -2px); filter: drop-shadow(2px 0 0 red) drop-shadow(-2px 0 0 cyan); }
+            60% { transform: translate(-2px, 3px); filter: drop-shadow(-2px 0 0 red) drop-shadow(2px 0 0 cyan); }
+            80% { transform: translate(2px, -3px); filter: drop-shadow(3px 0 0 red) drop-shadow(-3px 0 0 cyan); }
+            100% { transform: translate(0); filter: drop-shadow(2px 0 0 red) drop-shadow(-2px 0 0 cyan); }
+        }
+        body.glitch-active {
+            animation: glitchEffect 0.15s infinite;
+            overflow: hidden;
+        }
+        body.glitch-active::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.05); z-index: 9999; pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        /* Matrix Background Override */
+        body.matrix-active { background: transparent !important; }
+        #matrix-overlay { background: #000; }
+
+        /* Shutdown Overlay */
+        body.shutdown-active::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 99999; 
+        }
+
+        /* Chat Animations */
+        @keyframes waveAnimation {
+            0% { transform: rotate(0deg); }
+            10% { transform: rotate(14deg); }
+            20% { transform: rotate(-8deg); }
+            30% { transform: rotate(14deg); }
+            40% { transform: rotate(-4deg); }
+            50% { transform: rotate(10deg); }
+            60% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .wave-emoji {
+            display: inline-block;
+            transform-origin: 70% 70%;
+            animation: waveAnimation 2s infinite;
+            font-size: 1.2rem;
+        }
+
+        @keyframes rainbow { 
+            0% { background-position: 0% 50%; } 
+            100% { background-position: 100% 50%; } 
+        }
+        .rainbow-text {
+            background: linear-gradient(90deg, #ff3366, #ff9933, #ffff33, #33cc33, #3399ff, #9933ff);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: rainbow 2.5s linear infinite;
+        }
+
+        /* Vim and Nano Overlays */
+        #vim-overlay.hidden, #nano-overlay.hidden {
+            display: none !important; /* CRITICAL FIX: ensures they don't block the screen when hidden */
+        }
+        #vim-overlay, #nano-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; color: #fff; font-family: var(--mono-font); z-index: 10000;
+            display: flex; flex-direction: column;
+        }
+        #vim-content { flex: 1; padding: 4px; white-space: pre; overflow: hidden; }
+        #vim-status { background: #fff; color: #000; padding: 0 4px; display: flex; align-items: center; }
+        #vim-input { flex: 1; background: transparent; color: #000; border: none; outline: none; font-family: var(--mono-font); margin-left: 8px;}
+        
+        .nano-header, .nano-footer { background: #e2e8f0; color: #000; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center;}
+        .nano-header span:first-child { font-weight: bold; }
+        #nano-message { color: var(--accent); font-weight: bold; }
+        
+        /* Fixed Explicit Nano Buttons */
+        .nano-footer-buttons { display: flex; gap: 0.5rem; }
+        .nano-footer button { 
+            background: transparent;
+            border: none;
+            color: #000;
+            font-family: var(--mono-font);
+            font-size: 1rem;
+            cursor: pointer; 
+            transition: all 0.2s; 
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .nano-footer button:hover { 
+            background: rgba(0,0,0,0.1); 
+            color: var(--accent); 
+        }
+        #nano-textarea { flex: 1; background: transparent; color: #fff; border: none; outline: none; padding: 8px; font-family: var(--mono-font); resize: none; }
+
+
+        @media (max-width: 768px) {
+            .two-col { grid-template-columns: 1fr; gap: 2rem; }
+            .sidebar { position: static; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 2rem;}
+            .headshot-placeholder, .headshot { margin: 0 auto 1.2rem; }
+            .sidebar-links { text-align: left; }
+            nav ul { gap: 1rem; flex-wrap: wrap; }
+            .nav-row { flex-wrap: wrap; gap: 0.8rem; }
+            .skills-grid { grid-template-columns: 1fr; }
+            #terminal-resizer { display: none; } /* Disable manual resize on mobile */
+        }
+    </style>
 </head>
 <body>
 
@@ -33,7 +442,6 @@
             <li><a href="#about">About</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#education">Education</a></li>
-            <li><a href="#publications">Publications</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#cv">CV</a></li>
         </ul>
@@ -52,10 +460,10 @@
             <p class="my-title">M.Sc. Data &amp; Computer Science</p>
 
             <ul class="sidebar-links">
-                <li>📍 Heidelberg, Germany</li>
+                <li>📍 Heidelberg / Copenhagen</li>
                 <li><a href="mailto:robin.erb2000@gmail.com">Email</a></li>
                 <li><a href="https://github.com/robinerb" target="_blank">GitHub</a></li>
-                <li><a href="https://linkedin.com/in/robin-erb" target="_blank">LinkedIn</a></li>
+                <li><a href="https://www.linkedin.com/in/robin-erb-134b9a328/" target="_blank">LinkedIn</a></li>
             </ul>
         </aside>
 
@@ -72,8 +480,7 @@
                     production-grade systems.
                 </p>
                 <p class="interests">
-                    <strong>Interests:</strong> Deep Learning, Computer Vision, Human-Computer Interaction,
-                    Cloud Architecture, Data Science
+                    <strong>Interests:</strong> Deep Learning, Computer Vision, Cloud Architecture, Data Science
                 </p>
             </section>
 
@@ -124,7 +531,6 @@
                     <div class="tags">
                         <span class="tag">Unity</span>
                         <span class="tag">Arduino</span>
-                        <span class="tag">CAD</span>
                         <span class="tag">C</span>
                     </div>
                 </div>
@@ -146,7 +552,7 @@
                 <div class="edu-item">
                     <h3>B.Sc. Computer Science · <span class="accent">University of Konstanz</span></h3>
                     <div class="meta">Specialization: Data Science &amp; HCI · GPA: 1.4 · Oct 2021 – Mar 2025</div>
-                    <p class="thesis-note">Thesis (1.0): Developed a hybrid input device for 2D/3D interaction (Spatial Mouse 2)</p>
+                    <p class="thesis-note">Thesis (1.0): Developed a hybrid input device for 2D/3D interaction</p>
                 </div>
             </section>
 
@@ -159,7 +565,7 @@
                         "SpatialMouse: A Hybrid Pointing Device for Seamless Interaction Across
                         2D and 3D Spaces." In <em>Proc. of the 31st ACM Symposium on Virtual Reality
                         Software and Technology (VRST '25)</em>.
-                        <a href="https://doi.org/10.1145/3756884.3766047" target="_blank">DOI: 10.1145/3756884.3766047</a>
+                        <br><a href="https://doi.org/10.1145/3756884.3766047" target="_blank" style="font-size: 0.85rem; margin-top: 0.4rem; display: inline-block;">DOI: 10.1145/3756884.3766047</a>
                     </p>
                 </div>
             </section>
@@ -178,8 +584,6 @@
                     <div class="tags">
                         <span class="tag">Arduino</span>
                         <span class="tag">Unity</span>
-                        <span class="tag">CAD</span>
-                        <span class="tag">HCI</span>
                         <span class="tag">C</span>
                     </div>
                 </div>
@@ -196,23 +600,6 @@
                         <span class="tag">Google Cloud</span>
                         <span class="tag">Firestore</span>
                         <span class="tag">Shopify</span>
-                        <span class="tag">Serverless</span>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <h3><a href="#">AI Sales Pipeline with OCR</a></h3>
-                    <div class="meta">AI Automation · Document Processing</div>
-                    <p>
-                        Built an automated sales pipeline for an auto parts company using OCR
-                        to extract structured data from vehicle documents. Integrated an AI chatbot
-                        for customer inquiries and a staff verification dashboard.
-                    </p>
-                    <div class="tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">OCR</span>
-                        <span class="tag">AI Chatbot</span>
-                        <span class="tag">PyTorch</span>
                     </div>
                 </div>
             </section>
@@ -236,17 +623,14 @@
                             <span class="tag">PyTorch</span>
                             <span class="tag">Scikit-learn</span>
                             <span class="tag">Pandas</span>
-                            <span class="tag">OCR</span>
                         </div>
                     </div>
                     <div class="skill-group">
                         <h4>Cloud &amp; Tools</h4>
                         <div class="tags">
                             <span class="tag">Google Cloud</span>
-                            <span class="tag">Firebase</span>
                             <span class="tag">Docker</span>
                             <span class="tag">Git</span>
-                            <span class="tag">Unity</span>
                         </div>
                     </div>
                     <div class="skill-group">
@@ -254,7 +638,6 @@
                         <div class="tags">
                             <span class="tag">German (Native)</span>
                             <span class="tag">English (Fluent)</span>
-                            <span class="tag">French (Basic)</span>
                         </div>
                     </div>
                 </div>
@@ -270,51 +653,58 @@
     </div>
 </main>
 
-<!-- hidden elements for easter egg effects -->
-<div id="glitch-overlay"></div>
-<div id="blackout-overlay"></div>
-
-<div id="tampering-popup">
-    <div class="tampering-inner">
-        <div class="tampering-icon">⚠</div>
-        <div class="tampering-title">Error: Data Tampering</div>
-        <div class="tampering-sub">Unauthorized modification detected.</div>
-    </div>
-</div>
-
-<div id="konami-message">
-    <span>↑↑↓↓←→←→BA</span>
-    <br>
-    You now have 30 lives. Good luck.
-</div>
-
-<div id="corrigibility-banner">
-    A corrigible system would have stopped the first time.
-</div>
-
-<!-- terminal -->
-<div id="terminal-tooltip" class="tooltip-hidden">
-    <span>Interact with this website through the command line!</span>
-    <button id="tooltip-close" onclick="dismissTooltip()">✕</button>
-</div>
-
 <div id="terminal-bar" onclick="openTerminal()">
     <span class="terminal-prompt">robin@erb:~$</span>
     <span class="terminal-hint">click to open terminal</span>
 </div>
 
 <div id="terminal-window" class="hidden">
-    <div class="terminal-header">
+    <div id="terminal-resizer"></div>
+    <div class="terminal-header" id="terminal-header">
         <span>robin@erb — bash</span>
         <button onclick="closeTerminal()" class="terminal-close">✕</button>
     </div>
     <div id="terminal-output"></div>
     <div class="terminal-input-row">
-        <span class="terminal-prompt">robin@erb:~$ </span>
+        <span class="terminal-prompt" id="live-prompt">robin@erb:~$ </span>
         <input type="text" id="terminal-input" autofocus
-               autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false"
-               onkeydown="if(event.key==='Enter') runCommand(this.value)">
+               autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false">
         <span id="terminal-cursor"></span>
+    </div>
+</div>
+
+<!-- Easter Egg Overlays -->
+<div id="vim-overlay" class="hidden">
+    <div id="vim-content">
+<span style="color:var(--accent)">~</span>
+<span style="color:var(--accent)">~</span>
+<span style="color:var(--accent)">~</span>
+<span style="color:var(--accent)">~</span>
+                             VIM - Vi IMproved
+
+                              version 9.0
+                          by Bram Moolenaar et al.
+
+                    type  :q&lt;Enter&gt;               to exit
+                    type  :help&lt;Enter&gt;            for online help
+    </div>
+    <div id="vim-status">
+        <input type="text" id="vim-input" autocomplete="off" spellcheck="false">
+    </div>
+</div>
+
+<div id="nano-overlay" class="hidden">
+    <div class="nano-header">
+        <span>GNU nano 7.2</span>
+        <span id="nano-filename"></span>
+        <span id="nano-message"></span>
+    </div>
+    <textarea id="nano-textarea" spellcheck="false"></textarea>
+    <div class="nano-footer">
+        <div class="nano-footer-buttons">
+            <button onclick="closeNano(false)">^X Exit</button>
+            <button onclick="saveNano()">^O Write Out</button>
+        </div>
     </div>
 </div>
 
@@ -322,7 +712,928 @@
     <div class="container">&copy; 2026 Robin Erb</div>
 </footer>
 
-<script src="terminal.js"></script>
+<script>
+    /* ================================================================
+       Core Terminal Logic
+       ================================================================ */
+    (function () {
+        'use strict';
+
+        // DOM references
+        const bar = document.getElementById('terminal-bar');
+        const win = document.getElementById('terminal-window');
+        const output = document.getElementById('terminal-output');
+        const input = document.getElementById('terminal-input');
+        const cursor = document.getElementById('terminal-cursor');
+        const livePrompt = document.getElementById('live-prompt');
+        const resizer = document.getElementById('terminal-resizer');
+        
+        // Terminal State Variables
+        let history = [];
+        let histIdx = -1;
+        let gitState = {};
+        let cwd = '~';
+        let fileSystem = {};
+        let tabMatches = [];
+        let tabIndex = -1;
+
+        // Overlay states
+        window.inVim = false;
+        window.inNano = false;
+        window.nanoFile = '';
+        window.needsReload = false;
+
+        // Visual feedback logic for DOM removal
+        function removeDOMSection(name) {
+            const sectionId = name.replace(/\.(txt|pdf)$/i, '').toLowerCase();
+            const sectionEl = document.getElementById(sectionId);
+            
+            if (sectionEl) {
+                // Shrink and fade the section
+                sectionEl.style.transition = 'opacity 0.5s, transform 0.5s';
+                sectionEl.style.opacity = '0';
+                sectionEl.style.transform = 'scale(0.95)';
+                setTimeout(() => { if (sectionEl && sectionEl.parentNode) sectionEl.remove(); }, 500);
+
+                // Also fade out the link in the nav bar
+                const navLink = document.querySelector(`nav ul a[href="#${sectionId}"]`);
+                if (navLink && navLink.parentElement) {
+                    navLink.parentElement.style.transition = 'opacity 0.5s';
+                    navLink.parentElement.style.opacity = '0';
+                    setTimeout(() => { if (navLink.parentElement) navLink.parentElement.remove(); }, 500);
+                }
+                
+                // Flag that DOM has been modified so we can restore on close
+                window.needsReload = true;
+            }
+        }
+
+        // Re-usable factory function to generate fresh default state
+        function getInitialFileSystem() {
+            return {
+                '~': {
+                    'about': { type: 'dir' },
+                    'education': { type: 'dir' },
+                    'experience': { type: 'dir' },
+                    'projects': { type: 'dir' },
+                    'skills': { type: 'dir' },
+                    'contact.txt': { type: 'file', content: 'Email: robin.erb2000@gmail.com<br>LinkedIn: https://www.linkedin.com/in/robin-erb-134b9a328/<br>GitHub: https://github.com/robinerb' },
+                    'cv.pdf': { type: 'file', action: 'cv' }
+                },
+                '~/about': {
+                    'about.txt': { type: 'file', content: 'M.Sc. Data and Computer Science student at Heidelberg University.<br>Specializing in Deep Learning & Cloud Architecture.' }
+                },
+                '~/education': {
+                    'education.txt': { type: 'file', content: '<b>M.Sc. Data and Computer Science</b> — Heidelberg University<br><b>B.Sc. Computer Science</b> — University of Konstanz' }
+                },
+                '~/experience': {
+                    'experience.txt': { type: 'file', content: '<b>Independent Software Developer</b> — Lubner Perfumery<br><b>Independent Software Developer</b> — 1/2/3 Autoteile<br><b>Student Assistant</b> — University of Konstanz' }
+                },
+                '~/projects': {
+                    'projects.txt': { type: 'file', content: '<b>SpatialMouse</b> — Hybrid 2D/3D Pointing Device<br><b>Real-Time ERP–Shopify Middleware</b>' }
+                },
+                '~/skills': {
+                    'skills.txt': { type: 'file', content: '<b>Languages:</b> Python, Java, C++, SQL, R<br><b>ML/AI:</b> PyTorch, Scikit-learn, Pandas' }
+                }
+            };
+        }
+
+        // Stops all active visual easter eggs
+        function stopEasterEggs() {
+            if (window.needsReload) {
+                window.location.reload();
+                return;
+            }
+
+            // Stop Matrix
+            const matrixOverlay = document.getElementById('matrix-overlay');
+            if (matrixOverlay) {
+                clearInterval(parseInt(matrixOverlay.dataset.intervalId));
+                matrixOverlay.remove();
+            }
+            document.body.classList.remove('matrix-active');
+            
+            if (window.preMatrixTheme !== undefined) {
+                document.body.className = window.preMatrixTheme;
+                window.preMatrixTheme = undefined;
+            }
+
+            // Stop Glitch
+            document.body.classList.remove('glitch-active');
+            if (window.glitchTimeout) clearTimeout(window.glitchTimeout);
+
+            // Stop Gravity
+            document.body.classList.remove('gravity-active');
+            document.querySelectorAll('[data-vy]').forEach(el => {
+                el.style.position = '';
+                el.style.left = '';
+                el.style.top = '';
+                el.style.width = '';
+                el.style.margin = '';
+                el.style.zIndex = '';
+                el.style.opacity = '';
+                el.style.transform = '';
+                el.style.transition = '';
+                delete el.dataset.vy;
+                delete el.dataset.y;
+            });
+
+            // Clean sudo timeout
+            if (window.sudoInterval) clearInterval(window.sudoInterval);
+
+            // Hide Overlays safely
+            document.getElementById('vim-overlay').classList.add('hidden');
+            window.inVim = false;
+            document.getElementById('nano-overlay').classList.add('hidden');
+            window.inNano = false;
+            document.body.classList.remove('shutdown-active');
+        }
+
+        // Deep reset function called on open/close
+        function resetTerminalState() {
+            fileSystem = getInitialFileSystem();
+            gitState = { staged: false, committed: false, pulled: false, changesExist: true };
+            cwd = '~';
+            history = [];
+            histIdx = -1;
+            input.value = '';
+            livePrompt.textContent = getPrompt() + ' ';
+            output.innerHTML = '';
+            stopEasterEggs();
+        }
+
+        // Initialize state on load
+        resetTerminalState();
+
+        // Returns formatted prompt for printing history
+        function getPrompt() { return `robin@erb:${cwd}$`; }
+
+        // Opens the terminal window
+        window.openTerminal = function () {
+            win.classList.remove('hidden');
+            bar.style.display = 'none';
+            input.focus();
+            resetTerminalState(); // Complete reset on opening
+            printWelcome();
+            updateCursor();
+        };
+
+        // Closes the terminal window
+        window.closeTerminal = function () {
+            win.classList.add('hidden');
+            bar.style.display = 'flex';
+            resetTerminalState(); // Complete cleanup on exit
+        };
+
+        win.addEventListener('click', (e) => {
+            if (!window.inVim && !window.inNano && e.target !== input && e.target !== resizer) input.focus();
+        });
+
+        // ---------------------------------------------------------
+        // Vim & Nano Keyboard Overlays
+        // ---------------------------------------------------------
+
+        // Expose save and exit functions globally for mouse clicks
+        window.saveNano = function() {
+            if (!window.inNano) return;
+            const val = document.getElementById('nano-textarea').value;
+            const lines = val.split('\n').length;
+            const formattedVal = val.replace(/\n/g, '<br>');
+            
+            // Auto append .txt if missing
+            if (!window.nanoFile.includes('.')) {
+                window.nanoFile += '.txt';
+                document.getElementById('nano-filename').innerText = 'File: ' + window.nanoFile;
+            }
+            
+            fileSystem[cwd][window.nanoFile] = { type: 'file', content: formattedVal };
+            
+            // Visual feedback inside Nano header
+            const msgEl = document.getElementById('nano-message');
+            msgEl.innerText = `[ Wrote ${lines} lines ]`;
+            setTimeout(() => msgEl.innerText = '', 3000);
+        };
+
+        window.closeNano = function(saveChanges) {
+            if (!window.inNano) return;
+            if (saveChanges) window.saveNano();
+            document.getElementById('nano-overlay').classList.add('hidden');
+            window.inNano = false;
+            
+            // Ensure .txt is in the printed command response if changed
+            print(`Saved '${window.nanoFile}'.`);
+            
+            if (!win.classList.contains('hidden')) {
+                input.focus(); // Return focus to terminal if it's open
+            }
+        };
+
+        window.addEventListener('keydown', (e) => {
+            if (window.inVim) {
+                const vimInput = document.getElementById('vim-input');
+                if (e.key === ':' && document.activeElement !== vimInput) {
+                    vimInput.value = ':';
+                    vimInput.focus();
+                    e.preventDefault();
+                } else if (e.key === 'Enter' && document.activeElement === vimInput) {
+                    const val = vimInput.value.trim();
+                    if (val === ':wq' || val === ':q' || val === ':q!' || val === ':qa') {
+                        document.getElementById('vim-overlay').classList.add('hidden');
+                        window.inVim = false;
+                        vimInput.value = '';
+                        input.focus();
+                    } else {
+                        vimInput.value = '';
+                        vimInput.blur();
+                    }
+                }
+            }
+        });
+
+        document.getElementById('nano-textarea').addEventListener('keydown', (e) => {
+            if (!window.inNano) return;
+            
+            // Handle Keyboard shortcuts for nano actions
+            if (e.ctrlKey && e.key.toLowerCase() === 'x') {
+                e.preventDefault();
+                window.closeNano(false); // Default to exit
+            } else if (e.ctrlKey && (e.key.toLowerCase() === 'o' || e.key.toLowerCase() === 'w' || e.key.toLowerCase() === 's')) {
+                // Mapped ^O, ^W, and ^S all to Save logic for user convenience
+                e.preventDefault();
+                window.saveNano(); 
+            }
+        });
+
+        // ---------------------------------------------------------
+        // Resizer Logic (Drag the specific top line to resize)
+        // ---------------------------------------------------------
+        let isDragging = false;
+        let startY, startHeight;
+
+        resizer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startY = e.clientY;
+            startHeight = win.getBoundingClientRect().height;
+            win.classList.add('dragging');
+            resizer.classList.add('active');
+            document.body.style.userSelect = 'none'; 
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaY = startY - e.clientY;
+            let newHeight = startHeight + deltaY;
+            if (newHeight < 200) newHeight = 200; 
+            if (newHeight > window.innerHeight - 50) newHeight = window.innerHeight - 50; 
+            win.style.height = newHeight + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                win.classList.remove('dragging');
+                resizer.classList.remove('active');
+                document.body.style.userSelect = '';
+                if (!window.inVim && !window.inNano) input.focus();
+            }
+        });
+
+        // ---------------------------------------------------------
+        // Cursor Logic (Perfect Tracking)
+        // ---------------------------------------------------------
+        function updateCursor() {
+            const container = input.parentElement;
+            if (!container || !cursor) return;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.font = getComputedStyle(input).font;
+            const textW = ctx.measureText(input.value.substring(0, input.selectionStart)).width;
+            
+            const inputRect = input.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            cursor.style.left = (inputRect.left - containerRect.left + textW) + 'px';
+        }
+        
+        input.addEventListener('input', updateCursor);
+        input.addEventListener('click', updateCursor);
+        input.addEventListener('keyup', updateCursor);
+
+        // ---------------------------------------------------------
+        // Keyboard Navigation & Smart Tab Completion
+        // ---------------------------------------------------------
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const currentVal = input.value;
+                const parts = currentVal.split(' ');
+                const cmd = parts[0].toLowerCase();
+                
+                const isTrailingSpace = currentVal.endsWith(' ');
+                const searchPrefix = isTrailingSpace ? '' : parts[parts.length - 1].toLowerCase();
+
+                if (tabMatches.length > 0 && tabMatches[tabIndex] && (currentVal.endsWith(tabMatches[tabIndex]) || isTrailingSpace)) {
+                    tabIndex = (tabIndex + 1) % tabMatches.length;
+                } else {
+                    if (parts.length === 1 && !isTrailingSpace) {
+                        // Removed easter eggs from base command completion 
+                        const cmds = ['help', 'clear', 'exit', 'ls', 'cd', 'cat', 'pwd', 'rm', 'rmdir', 'mkdir', 'nano', 'theme', 'history', 'weather', 'git', 'stop', 'test', 'hello', 'hallo'];
+                        tabMatches = cmds.filter(c => c.startsWith(searchPrefix));
+                    } else if (cmd === 'cd' || cmd === 'rmdir') {
+                        const dirs = Object.keys(fileSystem[cwd] || {}).filter(k => fileSystem[cwd][k].type === 'dir');
+                        if (cwd !== '~') dirs.push('..'); 
+                        tabMatches = dirs.filter(d => d.startsWith(searchPrefix));
+                    } else if (cmd === 'cat' || cmd === 'rm' || cmd === 'nano' || cmd === 'vim') {
+                        const allFiles = Object.keys(fileSystem[cwd] || {});
+                        tabMatches = allFiles.filter(f => f.startsWith(searchPrefix));
+                    } else if (cmd === 'theme') {
+                        const themes = ['light', 'dark', 'hacker'];
+                        tabMatches = themes.filter(t => t.startsWith(searchPrefix));
+                    } else if (cmd === 'weather') {
+                        const cities = ['heidelberg', 'copenhagen', 'berlin', 'london', 'tokyo', 'paris', 'new-york'];
+                        tabMatches = cities.filter(c => c.startsWith(searchPrefix));
+                    } else if (cmd === 'git') {
+                        const gitCmds = ['status', 'add', 'commit', 'push', 'pull'];
+                        tabMatches = gitCmds.filter(c => c.startsWith(searchPrefix));
+                    } else {
+                        tabMatches = [];
+                    }
+                    tabIndex = 0;
+                }
+
+                if (tabMatches.length > 0) {
+                    if (parts.length === 1 && !isTrailingSpace) {
+                        input.value = tabMatches[tabIndex];
+                    } else {
+                        if (isTrailingSpace) {
+                            input.value = currentVal + tabMatches[tabIndex];
+                        } else {
+                            parts[parts.length - 1] = tabMatches[tabIndex];
+                            input.value = parts.join(' ');
+                        }
+                    }
+                }
+                updateCursor();
+                return;
+            } else {
+                tabMatches = [];
+                tabIndex = -1;
+            }
+
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                window.runCommand(this.value);
+            }
+            else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (histIdx < history.length - 1) {
+                    histIdx++;
+                    input.value = history[history.length - 1 - histIdx];
+                    updateCursor();
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (histIdx > 0) {
+                    histIdx--;
+                    input.value = history[history.length - 1 - histIdx];
+                } else {
+                    histIdx = -1;
+                    input.value = '';
+                }
+                updateCursor();
+            }
+        });
+
+        // ---------------------------------------------------------
+        // Command Printing & Execution
+        // ---------------------------------------------------------
+        function print(text, cls) {
+            const line = document.createElement('div');
+            if (cls) line.className = cls;
+            line.textContent = text;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function printHTML(html) {
+            const line = document.createElement('div');
+            line.innerHTML = html;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function escapeHTML(str) { return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+        function printWelcome() {
+            printHTML(`<span style="color:var(--term-prompt);font-weight:600">
+     ____        _     _         _____      _
+    |  _ \\ ___  | |__ (_)_ __   | ____|_ __| |__
+    | |_) / _ \\ | '_ \\| | '_ \\  |  _| | '__| '_ \\
+    |  _ < (_) || |_) | | | | | | |___| |  | |_) |
+    |_| \\_\\___/ |_.__/|_|_| |_| |_____|_|  |_.__/
+    </span>`);
+            print('');
+            print('Welcome to my portfolio terminal. Type "help" to see available commands.');
+            print('');
+        }
+
+        window.runCommand = function (val) {
+            const cmd = val.trim();
+            input.value = '';
+            updateCursor();
+            if (!cmd) return;
+
+            history.push(cmd);
+            histIdx = -1;
+            
+            printHTML('<span style="color:var(--term-prompt)">' + getPrompt() + '</span> ' + escapeHTML(cmd));
+
+            // Extremely specific check for sudo root deletion
+            if (cmd === 'sudo rm -rf /') {
+                print('Initiating root deletion... Goodbye.');
+                let targets = Array.from(document.querySelectorAll('.container > *, nav, footer'));
+                window.sudoInterval = setInterval(() => {
+                    if(targets.length > 0) {
+                        let idx = Math.floor(Math.random() * targets.length);
+                        let el = targets[idx];
+                        el.style.transition = 'opacity 0.5s, transform 0.5s';
+                        el.style.opacity = '0';
+                        el.style.transform = 'scale(0.8)';
+                        setTimeout(() => { if (el && el.parentNode) el.remove(); }, 500);
+                        targets.splice(idx, 1);
+                    } else {
+                        clearInterval(window.sudoInterval);
+                        print('System completely erased. (Close terminal to restore)');
+                        window.needsReload = true;
+                    }
+                }, 500);
+                return; // Prevent further command parsing
+            }
+
+            const parts = cmd.split(/\s+/);
+            const base = parts[0].toLowerCase();
+            const fullCmd = cmd.toLowerCase();
+
+            switch (base) {
+                case 'help': 
+                    printHTML(`<span style="color:var(--term-prompt);font-weight:600">Available commands:</span>
+      <span style="color:var(--term-text)">ls</span>             List directory contents
+      <span style="color:var(--term-text)">cd &lt;dir&gt;</span>       Change directory
+      <span style="color:var(--term-text)">pwd</span>            Print working directory
+      <span style="color:var(--term-text)">cat &lt;file&gt;</span>     Read file contents
+      <span style="color:var(--term-text)">mkdir &lt;dir&gt;</span>    Make a new directory
+      <span style="color:var(--term-text)">nano &lt;file&gt;</span>    Edit or create text files
+      <span style="color:var(--term-text)">rm &lt;name&gt;</span>      Remove file or directory (-rf supported)
+      <span style="color:var(--term-text)">rmdir &lt;dir&gt;</span>    Remove directories (-rf supported)
+      <span style="color:var(--term-text)">theme &lt;name&gt;</span>   Change site theme (light, dark, hacker)
+      <span style="color:var(--term-text)">weather &lt;city&gt;</span> Check live weather
+      <span style="color:var(--term-text)">git</span>            Version control simulation
+      <span style="color:var(--term-text)">history</span>        Show command history
+      <span style="color:var(--term-text)">stop</span>           Terminate all active sub-processes (easter eggs)
+      <span style="color:var(--term-text)">clear</span>          Clear terminal
+      <span style="color:var(--term-text)">exit</span>           Close terminal`);
+                    break;
+                case 'pwd':
+                    print(cwd === '~' ? '/home/robin' : `/home/robin/${cwd.substring(2)}`);
+                    break;
+                case 'ls':
+                    const items = Object.keys(fileSystem[cwd] || {});
+                    if (cwd !== '~') items.unshift('..');
+                    
+                    const lsOutput = items.map(item => {
+                        if (item === '..') return '<span style="color:var(--term-prompt);font-weight:600">..</span>';
+                        const isDir = fileSystem[cwd][item].type === 'dir';
+                        return isDir ? `<span style="color:var(--term-prompt);font-weight:600">${item}</span>` : item;
+                    }).join('  ');
+                    printHTML(lsOutput || 'Empty directory');
+                    break;
+                case 'cd':
+                    const target = parts[1];
+                    if (!target || target === '~') {
+                        cwd = '~';
+                    } else if (target === '..') {
+                        if (cwd !== '~') {
+                            cwd = cwd.substring(0, cwd.lastIndexOf('/'));
+                            if (cwd === '') cwd = '~';
+                        }
+                    } else {
+                        if (fileSystem[cwd] && fileSystem[cwd][target] && fileSystem[cwd][target].type === 'dir') {
+                            cwd = cwd === '~' ? `~/${target}` : `${cwd}/${target}`;
+                        } else if (fileSystem[cwd] && fileSystem[cwd][target]) {
+                            print(`bash: cd: ${target}: Not a directory`);
+                        } else {
+                            print(`bash: cd: ${target}: No such file or directory`);
+                        }
+                    }
+                    livePrompt.textContent = getPrompt() + ' ';
+                    updateCursor();
+                    break;
+                case 'cat':
+                    const file = parts[1];
+                    if (!file) {
+                        print('cat: missing operand');
+                    } else if (fileSystem[cwd] && fileSystem[cwd][file] && fileSystem[cwd][file].type === 'file') {
+                        if (fileSystem[cwd][file].action === 'cv') {
+                            printHTML('Opening CV... <a href="Robin_Erb_CV.pdf" target="_blank" style="color:var(--term-prompt)">Download PDF</a>');
+                            window.open('Robin_Erb_CV.pdf', '_blank');
+                        } else {
+                            printHTML(fileSystem[cwd][file].content);
+                        }
+                    } else if (fileSystem[cwd] && fileSystem[cwd][file] && fileSystem[cwd][file].type === 'dir') {
+                        print(`cat: ${file}: Is a directory`);
+                    } else {
+                        print(`cat: ${file}: No such file or directory`);
+                    }
+                    break;
+                
+                case 'mkdir':
+                    const newDir = parts[1];
+                    if (!newDir) {
+                        print('mkdir: missing operand');
+                    } else if (fileSystem[cwd] && fileSystem[cwd][newDir]) {
+                        print(`mkdir: cannot create directory '${newDir}': File exists`);
+                    } else {
+                        fileSystem[cwd][newDir] = { type: 'dir' };
+                        const newPath = cwd === '~' ? `~/${newDir}` : `${cwd}/${newDir}`;
+                        fileSystem[newPath] = {};
+                    }
+                    break;
+
+                case 'rmdir':
+                    const rmflag = parts[1] && parts[1].startsWith('-') ? parts[1] : null;
+                    const dirTargetName = rmflag ? parts[2] : parts[1];
+
+                    if (!dirTargetName) {
+                        print('rmdir: missing operand');
+                    } else if (dirTargetName === '..' || dirTargetName === '.') {
+                        print(`rmdir: failed to remove '${dirTargetName}': Invalid argument`);
+                    } else if (fileSystem[cwd] && fileSystem[cwd][dirTargetName]) {
+                        if (fileSystem[cwd][dirTargetName].type === 'dir') {
+                            const dirPath = cwd === '~' ? `~/${dirTargetName}` : `${cwd}/${dirTargetName}`;
+                            const isEmpty = Object.keys(fileSystem[dirPath] || {}).length === 0;
+                            
+                            if (isEmpty || rmflag === '-r' || rmflag === '-rf') {
+                                delete fileSystem[cwd][dirTargetName];
+                                removeDOMSection(dirTargetName);
+                                
+                                // Recursive cleanup of inner files/folders
+                                for (let key in fileSystem) {
+                                    if (key === dirPath || key.startsWith(dirPath + '/')) {
+                                        delete fileSystem[key];
+                                    }
+                                }
+                            } else {
+                                print(`rmdir: failed to remove '${dirTargetName}': Directory not empty. Use -r or -rf to remove it.`);
+                            }
+                        } else {
+                            print(`rmdir: failed to remove '${dirTargetName}': Not a directory`);
+                        }
+                    } else {
+                        print(`rmdir: failed to remove '${dirTargetName}': No such file or directory`);
+                    }
+                    break;
+                
+                case 'rm':
+                    const rflag = parts[1] && parts[1].startsWith('-') ? parts[1] : null;
+                    const rmTargetNameObj = rflag ? parts[2] : parts[1];
+
+                    if (!rmTargetNameObj) {
+                        print('rm: missing operand');
+                    } else if (rmTargetNameObj === '*' || rmTargetNameObj === '.') {
+                        print('rm: refusing to delete everything to save your sanity.');
+                    } else if (fileSystem[cwd] && fileSystem[cwd][rmTargetNameObj]) {
+                        const isDir = fileSystem[cwd][rmTargetNameObj].type === 'dir';
+                        
+                        // Reject directory deletion unless recursive flag is provided
+                        if (isDir && rflag !== '-r' && rflag !== '-rf') {
+                            print(`rm: cannot remove '${rmTargetNameObj}': Is a directory`);
+                        } else {
+                            // Delete from current scope
+                            delete fileSystem[cwd][rmTargetNameObj];
+                            removeDOMSection(rmTargetNameObj);
+                            
+                            // If it was a directory, recursively scrub all subdirectories/files from global fileSystem
+                            if (isDir) {
+                                const dirPathPrefix = cwd === '~' ? `~/${rmTargetNameObj}` : `${cwd}/${rmTargetNameObj}`;
+                                for (let key in fileSystem) {
+                                    if (key === dirPathPrefix || key.startsWith(dirPathPrefix + '/')) {
+                                        delete fileSystem[key];
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        print(`rm: cannot remove '${rmTargetNameObj}': No such file or directory`);
+                    }
+                    break;
+
+                case 'theme':
+                    const theme = parts[1];
+                    if (theme === 'dark') {
+                        document.body.className = 'theme-dark';
+                        print('Theme set to Dark Mode.');
+                    } else if (theme === 'light') {
+                        document.body.className = '';
+                        print('Theme set to Light Mode.');
+                    } else if (theme === 'hacker') {
+                        document.body.className = 'theme-hacker';
+                        print('Theme set to Hacker. Wake up, Neo...');
+                    } else {
+                        print('Usage: theme <light | dark | hacker>');
+                    }
+                    break;
+
+                case 'weather':
+                    const city = parts.slice(1).join(' ').replace('-', ' ');
+                    if (!city) {
+                        print('Usage: weather <city>');
+                        break;
+                    }
+                    print(`Fetching live weather for ${escapeHTML(city)}...`);
+                    
+                    fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (!data.results || data.results.length === 0) {
+                                print(`weather: could not find city '${escapeHTML(city)}'`);
+                                return;
+                            }
+                            const loc = data.results[0];
+                            return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current_weather=true`)
+                                .then(r => r.json())
+                                .then(wData => {
+                                    const w = wData.current_weather;
+                                    printHTML(`<b>${escapeHTML(loc.name)}, ${escapeHTML(loc.country)}</b>: ${w.temperature}°C, Wind: ${w.windspeed} km/h`);
+                                });
+                        })
+                        .catch(e => print('weather: failed to fetch data. Are you offline?'));
+                    break;
+
+                // ---------------------------------------------------------
+                // GIT EASTER EGG LOGIC
+                // ---------------------------------------------------------
+                case 'git':
+                    const subCmd = parts[1] ? parts[1].toLowerCase() : '';
+                    if (!subCmd) {
+                        print('usage: git <command> [<args>]\n\nAvailable commands:\n  status     Show the working tree status\n  add        Add file contents to the index\n  commit     Record changes to the repository\n  push       Update remote refs along with associated objects\n  pull       Fetch from and integrate with another repository or a local branch');
+                        break;
+                    }
+                    
+                    switch (subCmd) {
+                        case 'status':
+                            if (!gitState.pulled) {
+                                print('On branch main\nYour branch is behind \'origin/main\' by 1 commit, and can be fast-forwarded.\n  (use "git pull" to update your local branch)\n\nnothing to commit, working tree clean');
+                            } else if (gitState.committed) {
+                                print('On branch main\nYour branch is ahead of \'origin/main\' by 1 commit.\n  (use "git push" to publish your local commits)\n\nnothing to commit, working tree clean');
+                            } else if (gitState.staged) {
+                                print('On branch main\nChanges to be committed:\n  (use "git restore --staged <file>..." to unstage)\n\n\tmodified:   index.html');
+                            } else if (gitState.changesExist) {
+                                print('On branch main\nChanges not staged for commit:\n  (use "git add <file>..." to update what will be committed)\n\n\tmodified:   index.html\n\nno changes added to commit (use "git add" and/or "git commit -a")');
+                            } else {
+                                print('On branch main\nnothing to commit, working tree clean');
+                            }
+                            break;
+
+                        case 'add':
+                            if (!gitState.pulled) {
+                                print('error: you have unstaged changes but are behind origin/main. Consider pulling first.');
+                            } else if (!gitState.changesExist) {
+                                // Silent, like real git
+                            } else {
+                                gitState.staged = true;
+                                gitState.changesExist = false;
+                            }
+                            break;
+
+                        case 'commit':
+                            if (gitState.staged) {
+                                gitState.staged = false;
+                                gitState.committed = true;
+                                const msg = parts.slice(3).join(' ') || '"Update portfolio components"';
+                                print(`[main e4f5g6h] ${escapeHTML(msg)}\n 1 file changed, 42 insertions(+), 1 deletion(-)`);
+                            } else {
+                                print('no changes added to commit');
+                            }
+                            break;
+
+                        case 'push':
+                            if (gitState.committed) {
+                                gitState.committed = false;
+                                // Launch animation
+                                printHTML(`<div class="rocket-launch" style="color: var(--term-prompt); font-family: monospace; white-space: pre; margin: 10px 0; line-height: 1.2;">
+       /\\
+      (  )
+      (  )
+     /|/\\|\\
+    /_||||_\\
+                                </div>`);
+                                print('Enumerating objects: 5, done.\nCounting objects: 100% (5/5), done.\nWriting objects: 100% (3/3), 324 bytes | 324.00 KiB/s, done.\nTotal 3 (delta 2), reused 0 (delta 0)\nTo https://github.com/robinerb/portfolio.git\n   a1b2c3d..e4f5g6h  main -> main\n\n🚀 Successfully deployed to production!');
+                            } else {
+                                print('Everything up-to-date');
+                            }
+                            break;
+
+                        case 'pull':
+                            if (gitState.pulled) {
+                                print('Already up to date.');
+                            } else {
+                                gitState.pulled = true;
+                                // Dynamically add easter egg folder to the file system
+                                fileSystem['~']['eastereggs'] = { type: 'dir' };
+                                fileSystem['~/eastereggs'] = {
+                                    'secrets.txt': { type: 'file', content: `<span style="color:var(--term-prompt);font-weight:600">Top Secret Executables:</span><br>  <span style="color:var(--term-text)">matrix</span>         Enter the Matrix<br>  <span style="color:var(--term-text)">glitch</span>         Simulate a system failure<br>  <span style="color:var(--term-text)">gravity</span>        Disable gravity<br>  <span style="color:var(--term-text)">vim</span>            The ultimate trap<br>  <span style="color:var(--term-text)">shutdown</span>       Initiate shutdown sequence<br>  <span style="color:var(--term-text)">sudo rm -rf /</span>  Do NOT run this.` }
+                                };
+                                print('remote: Enumerating objects: 4, done.\nremote: Counting objects: 100% (4/4), done.\nremote: Compressing objects: 100% (2/2), done.\nUnpacking objects: 100% (4/4), 450 bytes | 450.00 KiB/s, done.\nFrom https://github.com/robinerb/portfolio\n * branch            main       -> FETCH_HEAD\nUpdating a1b2c3d..e4f5g6h\nFast-forward\n eastereggs/secrets.txt | 3 +++\n 1 file changed, 3 insertions(+)');
+                            }
+                            break;
+
+                        default:
+                            print(`git: '${subCmd}' is not a git command. See 'git --help'.`);
+                    }
+                    break;
+
+                case 'history':
+                    history.forEach((h, i) => {
+                        print(`  ${(i + 1).toString().padStart(3, ' ')}  ${escapeHTML(h)}`);
+                    });
+                    break;
+
+                // ---------------------------------------------------------
+                // OVERLAYS (Nano / Vim)
+                // ---------------------------------------------------------
+                case 'nano':
+                    window.nanoFile = parts[1] || 'untitled.txt';
+                    if (!window.nanoFile.includes('.')) window.nanoFile += '.txt';
+                    document.getElementById('nano-filename').innerText = 'File: ' + window.nanoFile;
+                    let content = fileSystem[cwd] && fileSystem[cwd][window.nanoFile] ? (fileSystem[cwd][window.nanoFile].content || '') : '';
+                    document.getElementById('nano-textarea').value = content.replace(/<br>/g, '\n');
+                    document.getElementById('nano-message').innerText = ''; // Clear prior message
+                    document.getElementById('nano-overlay').classList.remove('hidden');
+                    input.blur(); // Unfocus terminal
+                    document.getElementById('nano-textarea').focus();
+                    window.inNano = true;
+                    break;
+
+                case 'vim':
+                    window.inVim = true;
+                    document.getElementById('vim-overlay').classList.remove('hidden');
+                    document.getElementById('vim-input').value = '';
+                    input.blur(); // Unfocus terminal
+                    document.getElementById('vim-input').blur();
+                    break;
+
+                // ---------------------------------------------------------
+                // CHAT RESPONSES
+                // ---------------------------------------------------------
+                case 'test':
+                    print('What do you want to test?');
+                    break;
+
+                case 'hello':
+                case 'hallo':
+                    if (fullCmd === 'hello world' || fullCmd === 'hallo world') {
+                        printHTML('<span class="rainbow-text" style="font-weight:bold; font-size:1.2rem;">Hello World! 🌍 System online and ready.</span>');
+                    } else {
+                        printHTML('<span class="wave-emoji">👋</span> Hello there! Welcome to my terminal.');
+                    }
+                    break;
+
+                // ---------------------------------------------------------
+                // INLINE EASTER EGGS (HIDDEN FROM AUTOCOMPLETE)
+                // ---------------------------------------------------------
+                case 'shutdown':
+                    if (document.body.classList.contains('shutdown-active')) return;
+                    print('Initiating shutdown sequence...');
+                    setTimeout(() => {
+                        document.body.classList.add('shutdown-active');
+                        setTimeout(() => {
+                            document.body.classList.remove('shutdown-active');
+                            print('System rebooted.');
+                            output.scrollTop = output.scrollHeight;
+                        }, 3000);
+                    }, 800);
+                    break;
+
+                case 'gravity':
+                    if (document.body.classList.contains('gravity-active')) {
+                        print('Gravity is already broken.');
+                        return;
+                    }
+                    print('Gravity disabled. Brace yourself... (Type "stop" or close terminal to restore)');
+                    
+                    const fallers = document.querySelectorAll('.content section, .sidebar > *, nav, footer');
+                    fallers.forEach(el => {
+                        const rect = el.getBoundingClientRect();
+                        el.style.position = 'fixed';
+                        el.style.left = rect.left + 'px';
+                        el.style.top = rect.top + 'px';
+                        el.style.width = rect.width + 'px';
+                        el.style.margin = '0';
+                        el.style.zIndex = '1000';
+                        el.dataset.vy = 0;
+                        el.dataset.y = rect.top;
+                    });
+                    
+                    let lastTime = performance.now();
+                    const gravityLoop = (time) => {
+                        if(!document.body.classList.contains('gravity-active')) return;
+                        let dt = (time - lastTime) / 1000;
+                        lastTime = time;
+                        fallers.forEach(el => {
+                            let vy = parseFloat(el.dataset.vy) + 1500 * dt; // simulated gravity acceleration
+                            let y = parseFloat(el.dataset.y) + vy * dt;
+                            const maxH = window.innerHeight - el.offsetHeight;
+                            if (y > maxH) {
+                                y = maxH;
+                                vy *= -0.4; // simulated bounce dampening
+                            }
+                            el.dataset.vy = vy;
+                            el.dataset.y = y;
+                            el.style.top = y + 'px';
+                        });
+                        requestAnimationFrame(gravityLoop);
+                    };
+                    
+                    document.body.classList.add('gravity-active');
+                    requestAnimationFrame(gravityLoop);
+                    break;
+
+                case 'matrix':
+                    if (document.getElementById('matrix-overlay')) {
+                        print('Matrix is already running.');
+                        return;
+                    }
+                    print('Entering the Matrix... (Type "stop" or close terminal to exit)');
+                    
+                    // Force Hacker Theme so UI cards become solid dark to allow readability
+                    window.preMatrixTheme = document.body.className;
+                    document.body.className = 'theme-hacker matrix-active';
+
+                    const cvs = document.createElement('canvas');
+                    cvs.id = 'matrix-overlay';
+                    cvs.style.position = 'fixed';
+                    cvs.style.top = '0';
+                    cvs.style.left = '0';
+                    cvs.style.width = '100vw';
+                    cvs.style.height = '100vh';
+                    cvs.style.zIndex = '-1'; // Place firmly behind the .container
+                    document.body.appendChild(cvs);
+
+                    const ctx = cvs.getContext('2d');
+                    cvs.width = window.innerWidth;
+                    cvs.height = window.innerHeight;
+                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()'.split('');
+                    const fontSize = 16;
+                    const columns = cvs.width / fontSize;
+                    const drops = Array(Math.floor(columns)).fill(1);
+
+                    const draw = () => {
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                        ctx.fillRect(0, 0, cvs.width, cvs.height);
+                        ctx.fillStyle = '#0F0';
+                        ctx.font = fontSize + 'px monospace';
+                        for (let i = 0; i < drops.length; i++) {
+                            const text = chars[Math.floor(Math.random() * chars.length)];
+                            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                            if (drops[i] * fontSize > cvs.height && Math.random() > 0.975) drops[i] = 0;
+                            drops[i]++;
+                        }
+                    };
+                    const matrixInt = setInterval(draw, 33);
+                    cvs.dataset.intervalId = matrixInt;
+                    break;
+
+                case 'glitch':
+                    if (document.body.classList.contains('glitch-active')) return;
+                    document.body.classList.add('glitch-active');
+                    print('Critical system failure initiated. Auto-stabilizing in 3 seconds...');
+                    
+                    if (window.glitchTimeout) clearTimeout(window.glitchTimeout);
+                    window.glitchTimeout = setTimeout(() => {
+                        stopEasterEggs();
+                        print('System stabilized.');
+                    }, 3000);
+                    break;
+
+                case 'stop':
+                    stopEasterEggs();
+                    print('Terminated all active sub-processes.');
+                    break;
+
+                case 'clear': 
+                    output.innerHTML = ''; 
+                    stopEasterEggs(); // Clear screen clears processes too
+                    break;
+
+                case 'exit': 
+                    window.closeTerminal(); 
+                    break;
+
+                default:
+                    print(`bash: ${base}: command not found. Type "help" for available commands.`);
+            }
+        };
+    })();
+</script>
 
 </body>
 </html>
