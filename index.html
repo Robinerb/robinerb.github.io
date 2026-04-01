@@ -101,6 +101,52 @@
             --term-muted: #007700;
         }
 
+        /* ================================================================
+           SPOTLIGHT (MAC OS STYLE)
+           ================================================================ */
+        #spotlight-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            z-index: 9999; display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 12vh; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        #spotlight-overlay.active { opacity: 1; pointer-events: auto; }
+        
+        #spotlight-modal {
+            width: 90%; max-width: 600px; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden; transform: scale(0.95); transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column;
+        }
+        #spotlight-overlay.active #spotlight-modal { transform: scale(1); }
+
+        .spotlight-input-wrapper {
+            display: flex; align-items: center; padding: 1rem 1.2rem; border-bottom: 1px solid var(--border);
+        }
+        .spotlight-input-wrapper svg { width: 20px; height: 20px; fill: none; stroke: var(--muted); stroke-width: 2; margin-right: 12px; }
+        #spotlight-input {
+            flex: 1; background: transparent; border: none; outline: none; font-size: 1.2rem;
+            color: var(--text); font-family: var(--body-font);
+        }
+        #spotlight-input::placeholder { color: var(--muted); }
+        .spotlight-hint { font-size: 0.8rem; color: var(--muted); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-family: var(--mono-font); }
+
+        #spotlight-results { max-height: 350px; overflow-y: auto; padding: 0.5rem; }
+        .spotlight-item {
+            display: flex; align-items: center; padding: 0.8rem 1rem; border-radius: 8px;
+            cursor: pointer; transition: background 0.1s, color 0.1s; color: var(--text-secondary);
+        }
+        .spotlight-item .icon { font-size: 1.2rem; margin-right: 12px; width: 24px; text-align: center; }
+        .spotlight-item .title { flex: 1; font-weight: 500; }
+        .spotlight-item .shortcut { font-size: 0.8rem; color: var(--muted); font-family: var(--mono-font); }
+        
+        .spotlight-item.active { background: var(--accent-dim); color: var(--accent); }
+        .spotlight-item.active .shortcut { color: var(--accent); }
+        /* Subtle hover that DOES NOT override the active state */
+        .spotlight-item:hover:not(.active) { background: rgba(128, 128, 128, 0.08); }
+        
+        .spotlight-no-results { padding: 2rem; text-align: center; color: var(--muted); font-size: 0.95rem; }
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -145,6 +191,16 @@
             white-space: nowrap; letter-spacing: -0.01em;
         }
         .nav-name:hover { text-decoration: none; color: var(--text); }
+        
+        .nav-search-trigger {
+            display: flex; align-items: center; gap: 8px; color: var(--muted);
+            cursor: pointer; padding: 6px 12px; border-radius: 20px; transition: all 0.2s;
+            background: var(--tag-bg); border: 1px solid var(--border); font-size: 0.85rem;
+            margin-right: auto;
+        }
+        .nav-search-trigger:hover { background: var(--border); color: var(--text); }
+        .nav-search-trigger svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+
         nav ul { list-style: none; display: flex; gap: 1.8rem; }
         nav ul a { color: var(--muted); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
         nav ul a:hover { color: var(--accent); }
@@ -313,6 +369,28 @@
 
         @keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
+        /* Terminal Help Formatting */
+        .help-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+        .help-cmd {
+            color: var(--term-text);
+            width: 140px;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+        .help-desc {
+            flex: 1;
+            min-width: 180px;
+            color: var(--term-muted);
+        }
+
+        /* ASCII Art Responsiveness */
+        .ascii-desktop { display: inline-block; }
+        .ascii-mobile { display: none; }
+
         /* Git Rocket Animation */
         @keyframes blastOff {
             0% { transform: translateY(0); opacity: 1; }
@@ -386,7 +464,7 @@
 
         /* Vim and Nano Overlays */
         #vim-overlay.hidden, #nano-overlay.hidden {
-            display: none !important; /* CRITICAL FIX: ensures they don't block the screen when hidden */
+            display: none !important; 
         }
         #vim-overlay, #nano-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -420,16 +498,24 @@
         }
         #nano-textarea { flex: 1; background: transparent; color: #fff; border: none; outline: none; padding: 8px; font-family: var(--mono-font); resize: none; }
 
-
         @media (max-width: 768px) {
             .two-col { grid-template-columns: 1fr; gap: 2rem; }
             .sidebar { position: static; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 2rem;}
             .headshot-placeholder, .headshot { margin: 0 auto 1.2rem; }
             .sidebar-links { text-align: left; }
+            
+            .nav-search-trigger span { display: none; } /* Hide "Search..." text on mobile */
+            .nav-search-trigger { padding: 8px; margin-left: auto; margin-right: 0; }
+
             nav ul { gap: 1rem; flex-wrap: wrap; }
             .nav-row { flex-wrap: wrap; gap: 0.8rem; }
             .skills-grid { grid-template-columns: 1fr; }
-            #terminal-resizer { display: none; } /* Disable manual resize on mobile */
+            #terminal-resizer { display: none; } 
+            
+            .ascii-desktop { display: none; }
+            .ascii-mobile { display: inline-block; font-weight: bold; font-size: 1.3rem; letter-spacing: 2px;}
+            
+            .help-cmd { width: 100px; }
         }
     </style>
 </head>
@@ -438,10 +524,15 @@
 <nav>
     <div class="container nav-row">
         <a href="#" class="nav-name">Robin Erb</a>
+        <div class="nav-search-trigger" onclick="window.toggleSpotlight()">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Search... ⌘K</span>
+        </div>
         <ul>
             <li><a href="#about">About</a></li>
             <li><a href="#experience">Experience</a></li>
             <li><a href="#education">Education</a></li>
+            <li><a href="#publications">Publications</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#cv">CV</a></li>
         </ul>
@@ -708,13 +799,27 @@
     </div>
 </div>
 
+<!-- Spotlight Overlay -->
+<div id="spotlight-overlay" onclick="if(event.target===this) window.toggleSpotlight()">
+    <div id="spotlight-modal">
+        <div class="spotlight-input-wrapper">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="spotlight-input" placeholder="Search sections, commands, or actions..." autocomplete="off" spellcheck="false">
+            <span class="spotlight-hint">ESC</span>
+        </div>
+        <div id="spotlight-results">
+            <!-- Results injected here via JS -->
+        </div>
+    </div>
+</div>
+
 <footer>
     <div class="container">&copy; 2026 Robin Erb</div>
 </footer>
 
 <script>
     /* ================================================================
-       Core Terminal Logic
+       Core Terminal Logic & System Scripts
        ================================================================ */
     (function () {
         'use strict';
@@ -743,19 +848,27 @@
         window.nanoFile = '';
         window.needsReload = false;
 
+        // Clipboard Copy Helper for Actions
+        function fallbackCopy(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            try { document.execCommand('copy'); } catch(e) {}
+            document.body.removeChild(el);
+        }
+
         // Visual feedback logic for DOM removal
         function removeDOMSection(name) {
             const sectionId = name.replace(/\.(txt|pdf)$/i, '').toLowerCase();
             const sectionEl = document.getElementById(sectionId);
             
             if (sectionEl) {
-                // Shrink and fade the section
                 sectionEl.style.transition = 'opacity 0.5s, transform 0.5s';
                 sectionEl.style.opacity = '0';
                 sectionEl.style.transform = 'scale(0.95)';
                 setTimeout(() => { if (sectionEl && sectionEl.parentNode) sectionEl.remove(); }, 500);
 
-                // Also fade out the link in the nav bar
                 const navLink = document.querySelector(`nav ul a[href="#${sectionId}"]`);
                 if (navLink && navLink.parentElement) {
                     navLink.parentElement.style.transition = 'opacity 0.5s';
@@ -763,7 +876,6 @@
                     setTimeout(() => { if (navLink.parentElement) navLink.parentElement.remove(); }, 500);
                 }
                 
-                // Flag that DOM has been modified so we can restore on close
                 window.needsReload = true;
             }
         }
@@ -773,21 +885,26 @@
             return {
                 '~': {
                     'about': { type: 'dir' },
-                    'education': { type: 'dir' },
                     'experience': { type: 'dir' },
+                    'education': { type: 'dir' },
+                    'publications': { type: 'dir' },
                     'projects': { type: 'dir' },
                     'skills': { type: 'dir' },
+                    '.env': { type: 'file', content: 'USER=robin<br>ROLE=developer<br>COFFEE_LEVEL=low<br>ROOT_ACCESS=false<br>SECRET_KEY=hunter2' },
                     'contact.txt': { type: 'file', content: 'Email: robin.erb2000@gmail.com<br>LinkedIn: https://www.linkedin.com/in/robin-erb-134b9a328/<br>GitHub: https://github.com/robinerb' },
                     'cv.pdf': { type: 'file', action: 'cv' }
                 },
                 '~/about': {
                     'about.txt': { type: 'file', content: 'M.Sc. Data and Computer Science student at Heidelberg University.<br>Specializing in Deep Learning & Cloud Architecture.' }
                 },
+                '~/experience': {
+                    'experience.txt': { type: 'file', content: '<b>Independent Software Developer</b> — Lubner Perfumery<br><b>Independent Software Developer</b> — 1/2/3 Autoteile<br><b>Student Assistant</b> — University of Konstanz' }
+                },
                 '~/education': {
                     'education.txt': { type: 'file', content: '<b>M.Sc. Data and Computer Science</b> — Heidelberg University<br><b>B.Sc. Computer Science</b> — University of Konstanz' }
                 },
-                '~/experience': {
-                    'experience.txt': { type: 'file', content: '<b>Independent Software Developer</b> — Lubner Perfumery<br><b>Independent Software Developer</b> — 1/2/3 Autoteile<br><b>Student Assistant</b> — University of Konstanz' }
+                '~/publications': {
+                    'publications.txt': { type: 'file', content: 'S. Hubenschmid, J. Zagermann, <b>R. Erb</b>, et al.<br>"SpatialMouse: A Hybrid Pointing Device..." (VRST \'25)' }
                 },
                 '~/projects': {
                     'projects.txt': { type: 'file', content: '<b>SpatialMouse</b> — Hybrid 2D/3D Pointing Device<br><b>Real-Time ERP–Shopify Middleware</b>' }
@@ -805,7 +922,6 @@
                 return;
             }
 
-            // Stop Matrix
             const matrixOverlay = document.getElementById('matrix-overlay');
             if (matrixOverlay) {
                 clearInterval(parseInt(matrixOverlay.dataset.intervalId));
@@ -818,11 +934,9 @@
                 window.preMatrixTheme = undefined;
             }
 
-            // Stop Glitch
             document.body.classList.remove('glitch-active');
             if (window.glitchTimeout) clearTimeout(window.glitchTimeout);
 
-            // Stop Gravity
             document.body.classList.remove('gravity-active');
             document.querySelectorAll('[data-vy]').forEach(el => {
                 el.style.position = '';
@@ -838,10 +952,8 @@
                 delete el.dataset.y;
             });
 
-            // Clean sudo timeout
             if (window.sudoInterval) clearInterval(window.sudoInterval);
 
-            // Hide Overlays safely
             document.getElementById('vim-overlay').classList.add('hidden');
             window.inVim = false;
             document.getElementById('nano-overlay').classList.add('hidden');
@@ -862,27 +974,23 @@
             stopEasterEggs();
         }
 
-        // Initialize state on load
         resetTerminalState();
 
-        // Returns formatted prompt for printing history
         function getPrompt() { return `robin@erb:${cwd}$`; }
 
-        // Opens the terminal window
         window.openTerminal = function () {
             win.classList.remove('hidden');
             bar.style.display = 'none';
             input.focus();
-            resetTerminalState(); // Complete reset on opening
+            resetTerminalState(); 
             printWelcome();
             updateCursor();
         };
 
-        // Closes the terminal window
         window.closeTerminal = function () {
             win.classList.add('hidden');
             bar.style.display = 'flex';
-            resetTerminalState(); // Complete cleanup on exit
+            resetTerminalState(); 
         };
 
         win.addEventListener('click', (e) => {
@@ -893,14 +1001,12 @@
         // Vim & Nano Keyboard Overlays
         // ---------------------------------------------------------
 
-        // Expose save and exit functions globally for mouse clicks
         window.saveNano = function() {
             if (!window.inNano) return;
             const val = document.getElementById('nano-textarea').value;
             const lines = val.split('\n').length;
             const formattedVal = val.replace(/\n/g, '<br>');
             
-            // Auto append .txt if missing
             if (!window.nanoFile.includes('.')) {
                 window.nanoFile += '.txt';
                 document.getElementById('nano-filename').innerText = 'File: ' + window.nanoFile;
@@ -908,7 +1014,6 @@
             
             fileSystem[cwd][window.nanoFile] = { type: 'file', content: formattedVal };
             
-            // Visual feedback inside Nano header
             const msgEl = document.getElementById('nano-message');
             msgEl.innerText = `[ Wrote ${lines} lines ]`;
             setTimeout(() => msgEl.innerText = '', 3000);
@@ -920,11 +1025,10 @@
             document.getElementById('nano-overlay').classList.add('hidden');
             window.inNano = false;
             
-            // Ensure .txt is in the printed command response if changed
             print(`Saved '${window.nanoFile}'.`);
             
             if (!win.classList.contains('hidden')) {
-                input.focus(); // Return focus to terminal if it's open
+                input.focus(); 
             }
         };
 
@@ -952,20 +1056,17 @@
 
         document.getElementById('nano-textarea').addEventListener('keydown', (e) => {
             if (!window.inNano) return;
-            
-            // Handle Keyboard shortcuts for nano actions
             if (e.ctrlKey && e.key.toLowerCase() === 'x') {
                 e.preventDefault();
-                window.closeNano(false); // Default to exit
+                window.closeNano(false); 
             } else if (e.ctrlKey && (e.key.toLowerCase() === 'o' || e.key.toLowerCase() === 'w' || e.key.toLowerCase() === 's')) {
-                // Mapped ^O, ^W, and ^S all to Save logic for user convenience
                 e.preventDefault();
                 window.saveNano(); 
             }
         });
 
         // ---------------------------------------------------------
-        // Resizer Logic (Drag the specific top line to resize)
+        // Resizer Logic 
         // ---------------------------------------------------------
         let isDragging = false;
         let startY, startHeight;
@@ -999,7 +1100,7 @@
         });
 
         // ---------------------------------------------------------
-        // Cursor Logic (Perfect Tracking)
+        // Cursor Logic 
         // ---------------------------------------------------------
         function updateCursor() {
             const container = input.parentElement;
@@ -1035,15 +1136,14 @@
                     tabIndex = (tabIndex + 1) % tabMatches.length;
                 } else {
                     if (parts.length === 1 && !isTrailingSpace) {
-                        // Removed easter eggs from base command completion 
                         const cmds = ['help', 'clear', 'exit', 'ls', 'cd', 'cat', 'pwd', 'rm', 'rmdir', 'mkdir', 'nano', 'theme', 'history', 'weather', 'git', 'stop', 'test', 'hello', 'hallo'];
                         tabMatches = cmds.filter(c => c.startsWith(searchPrefix));
                     } else if (cmd === 'cd' || cmd === 'rmdir') {
-                        const dirs = Object.keys(fileSystem[cwd] || {}).filter(k => fileSystem[cwd][k].type === 'dir');
+                        const dirs = Object.keys(fileSystem[cwd] || {}).filter(k => fileSystem[cwd][k].type === 'dir' && (!k.startsWith('.') || searchPrefix.startsWith('.')));
                         if (cwd !== '~') dirs.push('..'); 
                         tabMatches = dirs.filter(d => d.startsWith(searchPrefix));
-                    } else if (cmd === 'cat' || cmd === 'rm' || cmd === 'nano' || cmd === 'vim') {
-                        const allFiles = Object.keys(fileSystem[cwd] || {});
+                    } else if (cmd === 'cat' || cmd === 'rm' || cmd === 'nano' || cmd === 'vim' || cmd === 'ls') {
+                        const allFiles = Object.keys(fileSystem[cwd] || {}).filter(f => !f.startsWith('.') || searchPrefix.startsWith('.'));
                         tabMatches = allFiles.filter(f => f.startsWith(searchPrefix));
                     } else if (cmd === 'theme') {
                         const themes = ['light', 'dark', 'hacker'];
@@ -1052,7 +1152,7 @@
                         const cities = ['heidelberg', 'copenhagen', 'berlin', 'london', 'tokyo', 'paris', 'new-york'];
                         tabMatches = cities.filter(c => c.startsWith(searchPrefix));
                     } else if (cmd === 'git') {
-                        const gitCmds = ['status', 'add', 'commit', 'push', 'pull'];
+                        const gitCmds = ['status', 'add', 'commit', 'push', 'pull', '--help'];
                         tabMatches = gitCmds.filter(c => c.startsWith(searchPrefix));
                     } else {
                         tabMatches = [];
@@ -1124,13 +1224,16 @@
         function escapeHTML(str) { return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
         function printWelcome() {
-            printHTML(`<span style="color:var(--term-prompt);font-weight:600">
-     ____        _     _         _____      _
-    |  _ \\ ___  | |__ (_)_ __   | ____|_ __| |__
-    | |_) / _ \\ | '_ \\| | '_ \\  |  _| | '__| '_ \\
-    |  _ < (_) || |_) | | | | | | |___| |  | |_) |
-    |_| \\_\\___/ |_.__/|_|_| |_| |_____|_|  |_.__/
-    </span>`);
+            printHTML(`
+<span class="ascii-desktop" style="color:var(--term-prompt);font-weight:600; white-space:pre;">
+ ____        _     _         _____      _
+|  _ \\ ___  | |__ (_)_ __   | ____|_ __| |__
+| |_) / _ \\ | '_ \\| | '_ \\  |  _| | '__| '_ \\
+|  _ < (_) || |_) | | | | | | |___| |  | |_) |
+|_| \\_\\___/ |_.__/|_|_| |_| |_____|_|  |_.__/
+</span>
+<span class="ascii-mobile" style="color:var(--term-prompt);">ROBIN ERB — TERMINAL</span>
+`);
             print('');
             print('Welcome to my portfolio terminal. Type "help" to see available commands.');
             print('');
@@ -1147,7 +1250,6 @@
             
             printHTML('<span style="color:var(--term-prompt)">' + getPrompt() + '</span> ' + escapeHTML(cmd));
 
-            // Extremely specific check for sudo root deletion
             if (cmd === 'sudo rm -rf /') {
                 print('Initiating root deletion... Goodbye.');
                 let targets = Array.from(document.querySelectorAll('.container > *, nav, footer'));
@@ -1166,7 +1268,7 @@
                         window.needsReload = true;
                     }
                 }, 500);
-                return; // Prevent further command parsing
+                return; 
             }
 
             const parts = cmd.split(/\s+/);
@@ -1174,39 +1276,84 @@
             const fullCmd = cmd.toLowerCase();
 
             switch (base) {
-                case 'help': 
-                    printHTML(`<span style="color:var(--term-prompt);font-weight:600">Available commands:</span>
-      <span style="color:var(--term-text)">ls</span>             List directory contents
-      <span style="color:var(--term-text)">cd &lt;dir&gt;</span>       Change directory
-      <span style="color:var(--term-text)">pwd</span>            Print working directory
-      <span style="color:var(--term-text)">cat &lt;file&gt;</span>     Read file contents
-      <span style="color:var(--term-text)">mkdir &lt;dir&gt;</span>    Make a new directory
-      <span style="color:var(--term-text)">nano &lt;file&gt;</span>    Edit or create text files
-      <span style="color:var(--term-text)">rm &lt;name&gt;</span>      Remove file or directory (-rf supported)
-      <span style="color:var(--term-text)">rmdir &lt;dir&gt;</span>    Remove directories (-rf supported)
-      <span style="color:var(--term-text)">theme &lt;name&gt;</span>   Change site theme (light, dark, hacker)
-      <span style="color:var(--term-text)">weather &lt;city&gt;</span> Check live weather
-      <span style="color:var(--term-text)">git</span>            Version control simulation
-      <span style="color:var(--term-text)">history</span>        Show command history
-      <span style="color:var(--term-text)">stop</span>           Terminate all active sub-processes (easter eggs)
-      <span style="color:var(--term-text)">clear</span>          Clear terminal
-      <span style="color:var(--term-text)">exit</span>           Close terminal`);
+                case 'help': {
+                    printHTML(`
+<div style="color:var(--term-prompt);font-weight:600;margin-bottom:8px;">Available commands:</div>
+<div class="help-row"><div class="help-cmd">ls [-a] [dir]</div><div class="help-desc">List directory contents</div></div>
+<div class="help-row"><div class="help-cmd">cd &lt;dir&gt;</div><div class="help-desc">Change directory</div></div>
+<div class="help-row"><div class="help-cmd">pwd</div><div class="help-desc">Print working directory</div></div>
+<div class="help-row"><div class="help-cmd">cat &lt;file&gt;</div><div class="help-desc">Read file contents</div></div>
+<div class="help-row"><div class="help-cmd">mkdir &lt;dir&gt;</div><div class="help-desc">Make a new directory</div></div>
+<div class="help-row"><div class="help-cmd">nano &lt;file&gt;</div><div class="help-desc">Edit or create text files</div></div>
+<div class="help-row"><div class="help-cmd">rm &lt;name&gt;</div><div class="help-desc">Remove file or directory (-rf supported)</div></div>
+<div class="help-row"><div class="help-cmd">rmdir &lt;dir&gt;</div><div class="help-desc">Remove directories (-rf supported)</div></div>
+<div class="help-row"><div class="help-cmd">theme &lt;name&gt;</div><div class="help-desc">Change site theme (light, dark, hacker)</div></div>
+<div class="help-row"><div class="help-cmd">weather &lt;city&gt;</div><div class="help-desc">Check live weather</div></div>
+<div class="help-row"><div class="help-cmd">git</div><div class="help-desc">Version control simulation</div></div>
+<div class="help-row"><div class="help-cmd">history</div><div class="help-desc">Show command history</div></div>
+<div class="help-row"><div class="help-cmd">stop</div><div class="help-desc">Terminate all active sub-processes</div></div>
+<div class="help-row"><div class="help-cmd">clear</div><div class="help-desc">Clear terminal output</div></div>
+<div class="help-row"><div class="help-cmd">exit</div><div class="help-desc">Close terminal</div></div>
+`);
                     break;
-                case 'pwd':
+                }
+                case 'pwd': {
                     print(cwd === '~' ? '/home/robin' : `/home/robin/${cwd.substring(2)}`);
                     break;
-                case 'ls':
-                    const items = Object.keys(fileSystem[cwd] || {});
-                    if (cwd !== '~') items.unshift('..');
+                }
+                case 'ls': {
+                    let lsTarget = cwd;
+                    let showHidden = false;
+                    let lsArgs = parts.slice(1);
                     
-                    const lsOutput = items.map(item => {
+                    if (lsArgs.length > 0 && lsArgs[0].startsWith('-')) {
+                        const flag = lsArgs.shift();
+                        if (flag.includes('a')) showHidden = true;
+                    }
+
+                    if (lsArgs.length > 0) {
+                        const t = lsArgs[0];
+                        if (t === '..') {
+                            lsTarget = cwd === '~' ? '~' : cwd.substring(0, cwd.lastIndexOf('/')) || '~';
+                        } else if (fileSystem[cwd] && fileSystem[cwd][t] && fileSystem[cwd][t].type === 'dir') {
+                            lsTarget = cwd === '~' ? `~/${t}` : `${cwd}/${t}`;
+                        } else if (fileSystem[cwd] && fileSystem[cwd][t]) {
+                            printHTML(`<span style="color:var(--term-text)">${t}</span>`);
+                            break;
+                        } else {
+                            print(`ls: cannot access '${t}': No such file or directory`);
+                            break;
+                        }
+                    }
+
+                    const items = Object.keys(fileSystem[lsTarget] || {});
+                    
+                    if (lsTarget === '~') {
+                        const rootOrder = ['about', 'experience', 'education', 'publications', 'projects', 'skills', 'contact.txt', 'cv.pdf', '.env'];
+                        items.sort((a, b) => {
+                            let idxA = rootOrder.indexOf(a);
+                            let idxB = rootOrder.indexOf(b);
+                            if (idxA === -1) idxA = 999;
+                            if (idxB === -1) idxB = 999;
+                            return idxA - idxB;
+                        });
+                    }
+
+                    let displayItems = items;
+                    if (!showHidden) {
+                        displayItems = items.filter(item => !item.startsWith('.'));
+                    }
+                    if (lsTarget !== '~') displayItems.unshift('..');
+                    
+                    const lsOutput = displayItems.map(item => {
                         if (item === '..') return '<span style="color:var(--term-prompt);font-weight:600">..</span>';
-                        const isDir = fileSystem[cwd][item].type === 'dir';
+                        const isDir = fileSystem[lsTarget][item].type === 'dir';
                         return isDir ? `<span style="color:var(--term-prompt);font-weight:600">${item}</span>` : item;
                     }).join('  ');
                     printHTML(lsOutput || 'Empty directory');
                     break;
-                case 'cd':
+                }
+                case 'cd': {
                     const target = parts[1];
                     if (!target || target === '~') {
                         cwd = '~';
@@ -1227,7 +1374,8 @@
                     livePrompt.textContent = getPrompt() + ' ';
                     updateCursor();
                     break;
-                case 'cat':
+                }
+                case 'cat': {
                     const file = parts[1];
                     if (!file) {
                         print('cat: missing operand');
@@ -1244,8 +1392,8 @@
                         print(`cat: ${file}: No such file or directory`);
                     }
                     break;
-                
-                case 'mkdir':
+                }
+                case 'mkdir': {
                     const newDir = parts[1];
                     if (!newDir) {
                         print('mkdir: missing operand');
@@ -1257,8 +1405,8 @@
                         fileSystem[newPath] = {};
                     }
                     break;
-
-                case 'rmdir':
+                }
+                case 'rmdir': {
                     const rmflag = parts[1] && parts[1].startsWith('-') ? parts[1] : null;
                     const dirTargetName = rmflag ? parts[2] : parts[1];
 
@@ -1275,7 +1423,6 @@
                                 delete fileSystem[cwd][dirTargetName];
                                 removeDOMSection(dirTargetName);
                                 
-                                // Recursive cleanup of inner files/folders
                                 for (let key in fileSystem) {
                                     if (key === dirPath || key.startsWith(dirPath + '/')) {
                                         delete fileSystem[key];
@@ -1291,8 +1438,8 @@
                         print(`rmdir: failed to remove '${dirTargetName}': No such file or directory`);
                     }
                     break;
-                
-                case 'rm':
+                }
+                case 'rm': {
                     const rflag = parts[1] && parts[1].startsWith('-') ? parts[1] : null;
                     const rmTargetNameObj = rflag ? parts[2] : parts[1];
 
@@ -1303,15 +1450,12 @@
                     } else if (fileSystem[cwd] && fileSystem[cwd][rmTargetNameObj]) {
                         const isDir = fileSystem[cwd][rmTargetNameObj].type === 'dir';
                         
-                        // Reject directory deletion unless recursive flag is provided
                         if (isDir && rflag !== '-r' && rflag !== '-rf') {
                             print(`rm: cannot remove '${rmTargetNameObj}': Is a directory`);
                         } else {
-                            // Delete from current scope
                             delete fileSystem[cwd][rmTargetNameObj];
                             removeDOMSection(rmTargetNameObj);
                             
-                            // If it was a directory, recursively scrub all subdirectories/files from global fileSystem
                             if (isDir) {
                                 const dirPathPrefix = cwd === '~' ? `~/${rmTargetNameObj}` : `${cwd}/${rmTargetNameObj}`;
                                 for (let key in fileSystem) {
@@ -1325,8 +1469,8 @@
                         print(`rm: cannot remove '${rmTargetNameObj}': No such file or directory`);
                     }
                     break;
-
-                case 'theme':
+                }
+                case 'theme': {
                     const theme = parts[1];
                     if (theme === 'dark') {
                         document.body.className = 'theme-dark';
@@ -1341,8 +1485,8 @@
                         print('Usage: theme <light | dark | hacker>');
                     }
                     break;
-
-                case 'weather':
+                }
+                case 'weather': {
                     const city = parts.slice(1).join(' ').replace('-', ' ');
                     if (!city) {
                         print('Usage: weather <city>');
@@ -1367,19 +1511,16 @@
                         })
                         .catch(e => print('weather: failed to fetch data. Are you offline?'));
                     break;
-
-                // ---------------------------------------------------------
-                // GIT EASTER EGG LOGIC
-                // ---------------------------------------------------------
-                case 'git':
+                }
+                case 'git': {
                     const subCmd = parts[1] ? parts[1].toLowerCase() : '';
-                    if (!subCmd) {
+                    if (!subCmd || subCmd === '--help' || subCmd === 'help') {
                         print('usage: git <command> [<args>]\n\nAvailable commands:\n  status     Show the working tree status\n  add        Add file contents to the index\n  commit     Record changes to the repository\n  push       Update remote refs along with associated objects\n  pull       Fetch from and integrate with another repository or a local branch');
                         break;
                     }
                     
                     switch (subCmd) {
-                        case 'status':
+                        case 'status': {
                             if (!gitState.pulled) {
                                 print('On branch main\nYour branch is behind \'origin/main\' by 1 commit, and can be fast-forwarded.\n  (use "git pull" to update your local branch)\n\nnothing to commit, working tree clean');
                             } else if (gitState.committed) {
@@ -1392,19 +1533,19 @@
                                 print('On branch main\nnothing to commit, working tree clean');
                             }
                             break;
-
-                        case 'add':
+                        }
+                        case 'add': {
                             if (!gitState.pulled) {
                                 print('error: you have unstaged changes but are behind origin/main. Consider pulling first.');
                             } else if (!gitState.changesExist) {
-                                // Silent, like real git
+                                // Silent
                             } else {
                                 gitState.staged = true;
                                 gitState.changesExist = false;
                             }
                             break;
-
-                        case 'commit':
+                        }
+                        case 'commit': {
                             if (gitState.staged) {
                                 gitState.staged = false;
                                 gitState.committed = true;
@@ -1414,11 +1555,10 @@
                                 print('no changes added to commit');
                             }
                             break;
-
-                        case 'push':
+                        }
+                        case 'push': {
                             if (gitState.committed) {
                                 gitState.committed = false;
-                                // Launch animation
                                 printHTML(`<div class="rocket-launch" style="color: var(--term-prompt); font-family: monospace; white-space: pre; margin: 10px 0; line-height: 1.2;">
        /\\
       (  )
@@ -1431,13 +1571,12 @@
                                 print('Everything up-to-date');
                             }
                             break;
-
-                        case 'pull':
+                        }
+                        case 'pull': {
                             if (gitState.pulled) {
                                 print('Already up to date.');
                             } else {
                                 gitState.pulled = true;
-                                // Dynamically add easter egg folder to the file system
                                 fileSystem['~']['eastereggs'] = { type: 'dir' };
                                 fileSystem['~/eastereggs'] = {
                                     'secrets.txt': { type: 'file', content: `<span style="color:var(--term-prompt);font-weight:600">Top Secret Executables:</span><br>  <span style="color:var(--term-text)">matrix</span>         Enter the Matrix<br>  <span style="color:var(--term-text)">glitch</span>         Simulate a system failure<br>  <span style="color:var(--term-text)">gravity</span>        Disable gravity<br>  <span style="color:var(--term-text)">vim</span>            The ultimate trap<br>  <span style="color:var(--term-text)">shutdown</span>       Initiate shutdown sequence<br>  <span style="color:var(--term-text)">sudo rm -rf /</span>  Do NOT run this.` }
@@ -1445,62 +1584,54 @@
                                 print('remote: Enumerating objects: 4, done.\nremote: Counting objects: 100% (4/4), done.\nremote: Compressing objects: 100% (2/2), done.\nUnpacking objects: 100% (4/4), 450 bytes | 450.00 KiB/s, done.\nFrom https://github.com/robinerb/portfolio\n * branch            main       -> FETCH_HEAD\nUpdating a1b2c3d..e4f5g6h\nFast-forward\n eastereggs/secrets.txt | 3 +++\n 1 file changed, 3 insertions(+)');
                             }
                             break;
-
-                        default:
+                        }
+                        default: {
                             print(`git: '${subCmd}' is not a git command. See 'git --help'.`);
+                        }
                     }
                     break;
-
-                case 'history':
+                }
+                case 'history': {
                     history.forEach((h, i) => {
                         print(`  ${(i + 1).toString().padStart(3, ' ')}  ${escapeHTML(h)}`);
                     });
                     break;
-
-                // ---------------------------------------------------------
-                // OVERLAYS (Nano / Vim)
-                // ---------------------------------------------------------
-                case 'nano':
+                }
+                case 'nano': {
                     window.nanoFile = parts[1] || 'untitled.txt';
                     if (!window.nanoFile.includes('.')) window.nanoFile += '.txt';
                     document.getElementById('nano-filename').innerText = 'File: ' + window.nanoFile;
                     let content = fileSystem[cwd] && fileSystem[cwd][window.nanoFile] ? (fileSystem[cwd][window.nanoFile].content || '') : '';
                     document.getElementById('nano-textarea').value = content.replace(/<br>/g, '\n');
-                    document.getElementById('nano-message').innerText = ''; // Clear prior message
+                    document.getElementById('nano-message').innerText = ''; 
                     document.getElementById('nano-overlay').classList.remove('hidden');
-                    input.blur(); // Unfocus terminal
+                    input.blur(); 
                     document.getElementById('nano-textarea').focus();
                     window.inNano = true;
                     break;
-
-                case 'vim':
+                }
+                case 'vim': {
                     window.inVim = true;
                     document.getElementById('vim-overlay').classList.remove('hidden');
                     document.getElementById('vim-input').value = '';
-                    input.blur(); // Unfocus terminal
+                    input.blur(); 
                     document.getElementById('vim-input').blur();
                     break;
-
-                // ---------------------------------------------------------
-                // CHAT RESPONSES
-                // ---------------------------------------------------------
-                case 'test':
+                }
+                case 'test': {
                     print('What do you want to test?');
                     break;
-
+                }
                 case 'hello':
-                case 'hallo':
+                case 'hallo': {
                     if (fullCmd === 'hello world' || fullCmd === 'hallo world') {
                         printHTML('<span class="rainbow-text" style="font-weight:bold; font-size:1.2rem;">Hello World! 🌍 System online and ready.</span>');
                     } else {
                         printHTML('<span class="wave-emoji">👋</span> Hello there! Welcome to my terminal.');
                     }
                     break;
-
-                // ---------------------------------------------------------
-                // INLINE EASTER EGGS (HIDDEN FROM AUTOCOMPLETE)
-                // ---------------------------------------------------------
-                case 'shutdown':
+                }
+                case 'shutdown': {
                     if (document.body.classList.contains('shutdown-active')) return;
                     print('Initiating shutdown sequence...');
                     setTimeout(() => {
@@ -1512,8 +1643,8 @@
                         }, 3000);
                     }, 800);
                     break;
-
-                case 'gravity':
+                }
+                case 'gravity': {
                     if (document.body.classList.contains('gravity-active')) {
                         print('Gravity is already broken.');
                         return;
@@ -1539,12 +1670,12 @@
                         let dt = (time - lastTime) / 1000;
                         lastTime = time;
                         fallers.forEach(el => {
-                            let vy = parseFloat(el.dataset.vy) + 1500 * dt; // simulated gravity acceleration
+                            let vy = parseFloat(el.dataset.vy) + 1500 * dt; 
                             let y = parseFloat(el.dataset.y) + vy * dt;
                             const maxH = window.innerHeight - el.offsetHeight;
                             if (y > maxH) {
                                 y = maxH;
-                                vy *= -0.4; // simulated bounce dampening
+                                vy *= -0.4; 
                             }
                             el.dataset.vy = vy;
                             el.dataset.y = y;
@@ -1556,15 +1687,14 @@
                     document.body.classList.add('gravity-active');
                     requestAnimationFrame(gravityLoop);
                     break;
-
-                case 'matrix':
+                }
+                case 'matrix': {
                     if (document.getElementById('matrix-overlay')) {
                         print('Matrix is already running.');
                         return;
                     }
                     print('Entering the Matrix... (Type "stop" or close terminal to exit)');
                     
-                    // Force Hacker Theme so UI cards become solid dark to allow readability
                     window.preMatrixTheme = document.body.className;
                     document.body.className = 'theme-hacker matrix-active';
 
@@ -1575,7 +1705,7 @@
                     cvs.style.left = '0';
                     cvs.style.width = '100vw';
                     cvs.style.height = '100vh';
-                    cvs.style.zIndex = '-1'; // Place firmly behind the .container
+                    cvs.style.zIndex = '-1'; 
                     document.body.appendChild(cvs);
 
                     const ctx = cvs.getContext('2d');
@@ -1601,8 +1731,8 @@
                     const matrixInt = setInterval(draw, 33);
                     cvs.dataset.intervalId = matrixInt;
                     break;
-
-                case 'glitch':
+                }
+                case 'glitch': {
                     if (document.body.classList.contains('glitch-active')) return;
                     document.body.classList.add('glitch-active');
                     print('Critical system failure initiated. Auto-stabilizing in 3 seconds...');
@@ -1613,25 +1743,319 @@
                         print('System stabilized.');
                     }, 3000);
                     break;
-
-                case 'stop':
+                }
+                case 'stop': {
                     stopEasterEggs();
                     print('Terminated all active sub-processes.');
                     break;
-
-                case 'clear': 
+                }
+                case 'clear': {
                     output.innerHTML = ''; 
-                    stopEasterEggs(); // Clear screen clears processes too
+                    stopEasterEggs(); 
                     break;
-
-                case 'exit': 
+                }
+                case 'exit': {
                     window.closeTerminal(); 
                     break;
-
-                default:
+                }
+                default: {
                     print(`bash: ${base}: command not found. Type "help" for available commands.`);
+                }
+            }
+        }; // End of runCommand scope
+
+        // ---------------------------------------------------------
+        // Spotlight / Command Palette Logic
+        // ---------------------------------------------------------
+        const spotlightOverlay = document.getElementById('spotlight-overlay');
+        const spotlightInput = document.getElementById('spotlight-input');
+        const spotlightResults = document.getElementById('spotlight-results');
+        
+        let spotlightActive = false;
+        let spotlightIndex = 0;
+        let currentFilteredActions = [];
+
+        // Global texts for Language toggles
+        const aboutEN = `I'm a computer science graduate student at Heidelberg University specializing in Machine Learning, currently on a semester abroad at the University of Copenhagen. My work spans deep learning, computer vision, and scalable data science. I've built real-time middleware systems, AI-driven sales automation pipelines, and hybrid input devices for spatial interaction. I'm passionate about turning research into production-grade systems.`;
+        const aboutDE = `Ich bin Informatik-Masterstudent an der Universität Heidelberg mit Spezialisierung auf Machine Learning und absolviere derzeit ein Auslandssemester an der Universität Kopenhagen. Meine Arbeit umfasst Deep Learning, Computer Vision und skalierbare Data Science. Ich habe Echtzeit-Middleware-Systeme, KI-gesteuerte Vertriebsautomatisierungs-Pipelines und hybride Eingabegeräte für räumliche Interaktion entwickelt. Ich brenne dafür, Forschung in produktionsreife Systeme umzusetzen.`;
+        const aboutDA = `Jeg læser til en kandidat i datalogi på Heidelberg Universitet med speciale i maskinlæring, og er i øjeblikket på udvekslingssemester på Københavns Universitet. Mit arbejde spænder over deep learning, computervision og skalerbar data science. Jeg har bygget realtids middleware-systemer, AI-drevne salgsautomatiseringer og hybride inputenheder for rumlig interaktion. Jeg brænder for at omdanne forskning til produktionsklare systemer.`;
+
+        // Full list of static actions
+        const actionsData = [
+            { id: 'about', title: 'Go to About', icon: '👤', desc: 'Section', action: () => { window.location.hash = 'about'; } },
+            { id: 'experience', title: 'Go to Experience', icon: '💼', desc: 'Section', action: () => { window.location.hash = 'experience'; } },
+            { id: 'education', title: 'Go to Education', icon: '🎓', desc: 'Section', action: () => { window.location.hash = 'education'; } },
+            { id: 'publications', title: 'Go to Publications', icon: '📚', desc: 'Section', action: () => { window.location.hash = 'publications'; } },
+            { id: 'projects', title: 'Go to Projects', icon: '🚀', desc: 'Section', action: () => { window.location.hash = 'projects'; } },
+            { id: 'skills', title: 'Go to Skills', icon: '🛠', desc: 'Section', action: () => { window.location.hash = 'skills'; } },
+            { id: 'cv', title: 'Download CV', icon: '📄', desc: 'Document', action: () => window.open('Robin_Erb_CV.pdf', '_blank') },
+            { id: 'terminal', title: 'Open Terminal', icon: '💻', desc: 'App', action: window.openTerminal },
+            
+            { id: 'weather-hint', title: 'Check Weather', icon: '⛅️', desc: 'Type "weather in <city>"', keepOpen: true, action: function() {
+                const input = document.getElementById('spotlight-input');
+                input.value = 'weather in ';
+                input.dispatchEvent(new Event('input'));
+                input.focus();
+            }},
+            { id: 'math-hint', title: 'Calculator', icon: '🧮', desc: 'Type an equation (e.g. 24 * 7)', keepOpen: true, action: function() {
+                document.getElementById('spotlight-input').focus();
+            }},
+
+            { id: 'copy-email', title: 'Copy Email', icon: '✉️', desc: 'Action', keepOpen: true, action: function(itemEl) {
+                fallbackCopy('robin.erb2000@gmail.com');
+                if (itemEl) itemEl.querySelector('.title').innerText = 'Copied! ✅';
+                setTimeout(() => { window.toggleSpotlight(); }, 1200);
+            }},
+
+            { id: 'linkedin', title: 'LinkedIn Profile', icon: '🔗', desc: 'External', action: () => window.open('https://www.linkedin.com/in/robin-erb-134b9a328/', '_blank') },
+            { id: 'github', title: 'GitHub Profile', icon: '🔗', desc: 'External', action: () => window.open('https://github.com/robinerb', '_blank') },
+            
+            { id: 'theme-light', title: 'Set Light Theme', icon: '☀️', desc: 'Appearance', action: () => { document.body.className = ''; window.preMatrixTheme = ''; } },
+            { id: 'theme-dark', title: 'Set Dark Theme', icon: '🌙', desc: 'Appearance', action: () => { document.body.className = 'theme-dark'; window.preMatrixTheme = 'theme-dark'; } },
+            { id: 'theme-hacker', title: 'Set Hacker Theme', icon: '🕶', desc: 'Appearance', action: () => { document.body.className = 'theme-hacker'; window.preMatrixTheme = 'theme-hacker'; } },
+            
+            { id: 'flip-coin', title: 'Flip a coin', icon: '🪙', desc: 'Game', keepOpen: true, action: function(itemEl) {
+                const res = Math.random() > 0.5 ? 'Heads! 🪙' : 'Tails! 🪙';
+                if (itemEl) {
+                    itemEl.querySelector('.title').innerText = res;
+                    itemEl.querySelector('.icon').innerText = '🎉';
+                }
+                setTimeout(() => { window.toggleSpotlight(); }, 1500);
+            }},
+            { id: 'roll-dice', title: 'Roll a dice', icon: '🎲', desc: 'Game', keepOpen: true, action: function(itemEl) {
+                const res = 'You rolled a ' + (Math.floor(Math.random() * 6) + 1) + '! 🎲';
+                if (itemEl) {
+                    itemEl.querySelector('.title').innerText = res;
+                    itemEl.querySelector('.icon').innerText = '🎉';
+                }
+                setTimeout(() => { window.toggleSpotlight(); }, 1500);
+            }},
+
+            { id: 'lang-de', title: 'Translate About to German', icon: '🇩🇪', desc: 'Language', action: () => { document.querySelector('#about p:first-of-type').innerText = aboutDE; window.location.hash = 'about'; } },
+            { id: 'lang-da', title: 'Translate About to Danish', icon: '🇩🇰', desc: 'Language', action: () => { document.querySelector('#about p:first-of-type').innerText = aboutDA; window.location.hash = 'about'; } },
+            { id: 'lang-en', title: 'Translate About to English', icon: '🇬🇧', desc: 'Language', action: () => { document.querySelector('#about p:first-of-type').innerText = aboutEN; window.location.hash = 'about'; } },
+
+            { id: 'confetti', title: 'Celebrate! (Confetti)', icon: '🎉', desc: 'Easter Egg', action: () => window.triggerConfetti() }
+        ];
+
+        // The default actions to show at the top when query is empty
+        const defaultActionIds = ['about', 'projects', 'terminal', 'weather-hint', 'math-hint', 'cv', 'copy-email', 'github', 'linkedin', 'theme-dark'];
+
+        window.toggleSpotlight = function() {
+            spotlightActive = !spotlightActive;
+            if (spotlightActive) {
+                spotlightOverlay.classList.add('active');
+                spotlightInput.value = '';
+                renderSpotlightResults('');
+                setTimeout(() => spotlightInput.focus(), 50);
+            } else {
+                spotlightOverlay.classList.remove('active');
+                spotlightInput.blur();
             }
         };
+
+        function renderSpotlightResults(query) {
+            let dynamicActions = [];
+            
+            // 1. Math Evaluator
+            const mathRegex = /^[0-9\s\+\-\*\/\(\)\.]+$/;
+            if (query.trim() && mathRegex.test(query) && /[0-9]/.test(query)) {
+                let evalSuccess = false;
+                let result = null;
+                
+                try {
+                    result = Function(`'use strict'; return (${query})`)();
+                    if (result !== undefined && !isNaN(result) && result !== Infinity && typeof result === 'number') {
+                        evalSuccess = true;
+                    }
+                } catch(e) {}
+
+                if (evalSuccess && /[\+\-\*\/\(\)]/.test(query)) {
+                    dynamicActions.push({
+                        id: 'math', title: `= ${result}`, icon: '🧮', desc: 'Copy Result', keepOpen: true, 
+                        action: function(itemEl) {
+                            fallbackCopy(result);
+                            if (itemEl) itemEl.querySelector('.title').innerText = 'Copied! ✅';
+                            setTimeout(() => {
+                                window.toggleSpotlight();
+                            }, 1200);
+                        }
+                    });
+                } else {
+                    dynamicActions.push({
+                        id: 'math-typing', title: `${query}`, icon: '🧮', desc: 'Calculate...', keepOpen: true, action: () => {}
+                    });
+                }
+            }
+            
+            // 2. Weather Search
+            const weatherMatch = query.toLowerCase().match(/^weather in\s+(.+)$/);
+            if (weatherMatch) {
+                const city = weatherMatch[1].trim();
+                if (city.length > 2) {
+                    if (!window.weatherCache) window.weatherCache = {};
+                    
+                    let title = `Fetching weather for ${city}...`;
+                    if (window.weatherCache[city]) {
+                        title = window.weatherCache[city];
+                    } else if (!window.weatherCache[city + '_fetching']) {
+                        window.weatherCache[city + '_fetching'] = true;
+                        
+                        fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`)
+                            .then(r => r.json())
+                            .then(data => {
+                                if (!data.results || data.results.length === 0) {
+                                    window.weatherCache[city] = `Could not find '${city}'`;
+                                } else {
+                                    const loc = data.results[0];
+                                    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current_weather=true`)
+                                        .then(r => r.json())
+                                        .then(wData => {
+                                            const w = wData.current_weather;
+                                            window.weatherCache[city] = `${loc.name}: ${w.temperature}°C, Wind: ${w.windspeed} km/h`;
+                                            if (spotlightInput.value.toLowerCase().includes(city)) {
+                                                renderSpotlightResults(spotlightInput.value);
+                                            }
+                                        });
+                                }
+                                if (spotlightInput.value.toLowerCase().includes(city)) {
+                                    renderSpotlightResults(spotlightInput.value);
+                                }
+                            })
+                            .catch(() => { window.weatherCache[city] = 'Failed to fetch weather.'; renderSpotlightResults(spotlightInput.value); });
+                    }
+                    
+                    dynamicActions.push({
+                        id: 'weather', title: title, icon: '⛅️', desc: 'Live Weather', keepOpen: true, action: () => {}
+                    });
+                }
+            }
+
+            // Assemble the final array to display
+            if (!query.trim()) {
+                // If empty, show defaults first, then EVERYTHING else!
+                const defaults = defaultActionIds.map(id => actionsData.find(a => a.id === id)).filter(Boolean);
+                const others = actionsData.filter(a => !defaultActionIds.includes(a.id));
+                currentFilteredActions = [...defaults, ...others];
+            } else {
+                const q = query.toLowerCase();
+                currentFilteredActions = [...dynamicActions, ...actionsData.filter(a => 
+                    a.title.toLowerCase().includes(q) || a.id.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q)
+                )];
+            }
+
+            spotlightIndex = 0;
+
+            if (currentFilteredActions.length === 0) {
+                spotlightResults.innerHTML = '<div class="spotlight-no-results">No results found for "' + escapeHTML(query) + '"</div>';
+                return;
+            }
+
+            spotlightResults.innerHTML = currentFilteredActions.map((action, idx) => `
+                <div class="spotlight-item ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+                    <span class="icon">${action.icon}</span>
+                    <span class="title">${action.title}</span>
+                    <span class="shortcut">${action.desc}</span>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.spotlight-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    executeSpotlightAction(parseInt(item.dataset.index));
+                });
+            });
+        }
+
+        function executeSpotlightAction(index) {
+            if (currentFilteredActions[index]) {
+                const actionObj = currentFilteredActions[index];
+                const itemEl = document.querySelector(`.spotlight-item[data-index="${index}"]`);
+                if (!actionObj.keepOpen) window.toggleSpotlight(); 
+                setTimeout(() => actionObj.action(itemEl), 150); 
+            }
+        }
+
+        spotlightInput.addEventListener('input', (e) => {
+            renderSpotlightResults(e.target.value);
+        });
+
+        spotlightInput.addEventListener('keydown', (e) => {
+            const items = document.querySelectorAll('.spotlight-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (spotlightIndex < currentFilteredActions.length - 1) spotlightIndex++;
+                updateSpotlightSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (spotlightIndex > 0) spotlightIndex--;
+                updateSpotlightSelection(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                executeSpotlightAction(spotlightIndex);
+            }
+        });
+
+        function updateSpotlightSelection(items) {
+            items.forEach(i => i.classList.remove('active'));
+            if (items[spotlightIndex]) {
+                items[spotlightIndex].classList.add('active');
+                items[spotlightIndex].scrollIntoView({ block: 'nearest' });
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                window.toggleSpotlight();
+            } else if (e.key === 'Escape') {
+                if (spotlightActive) {
+                    window.toggleSpotlight();
+                } else if (!win.classList.contains('hidden') && !window.inVim && !window.inNano) {
+                    window.closeTerminal();
+                } else if (!window.inVim && !window.inNano && win.classList.contains('hidden')) {
+                    window.toggleSpotlight(); 
+                }
+            }
+        });
+
+        // ---------------------------------------------------------
+        // Easter Egg Actions
+        // ---------------------------------------------------------
+        window.triggerConfetti = function() {
+            const colors = ['#2563eb', '#ff3366', '#38bdf8', '#33cc33', '#ffff33'];
+            const confettiCount = 100;
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.top = '0'; container.style.left = '0';
+            container.style.width = '100vw'; container.style.height = '100vh';
+            container.style.pointerEvents = 'none'; container.style.zIndex = '99999';
+            document.body.appendChild(container);
+
+            for(let i=0; i<confettiCount; i++) {
+                const conf = document.createElement('div');
+                conf.style.position = 'absolute';
+                conf.style.width = '8px'; conf.style.height = '16px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.top = '-20px';
+                conf.style.opacity = Math.random() + 0.5;
+                conf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                const duration = Math.random() * 2 + 2; 
+                conf.style.transition = `top ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform ${duration}s linear, opacity ${duration}s`;
+                
+                container.appendChild(conf);
+
+                requestAnimationFrame(() => {
+                    conf.style.top = '120vh';
+                    conf.style.transform = `rotate(${Math.random() * 720}deg)`;
+                    conf.style.opacity = 0;
+                });
+            }
+
+            setTimeout(() => container.remove(), 4500);
+        };
+
     })();
 </script>
 
