@@ -756,12 +756,12 @@
         <button onclick="closeTerminal()" class="terminal-close">✕</button>
     </div>
     <div id="terminal-output"></div>
-    <div class="terminal-input-row">
+    <form id="terminal-form" class="terminal-input-row">
         <span class="terminal-prompt" id="live-prompt">robin@erb:~$ </span>
-        <input type="text" id="terminal-input" autofocus
+        <input type="text" id="terminal-input" autofocus enterkeyhint="send"
                autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false">
         <span id="terminal-cursor"></span>
-    </div>
+    </form>
 </div>
 
 <!-- Easter Egg Overlays -->
@@ -829,6 +829,7 @@
         const win = document.getElementById('terminal-window');
         const output = document.getElementById('terminal-output');
         const input = document.getElementById('terminal-input');
+        const terminalForm = document.getElementById('terminal-form');
         const cursor = document.getElementById('terminal-cursor');
         const livePrompt = document.getElementById('live-prompt');
         const resizer = document.getElementById('terminal-resizer');
@@ -1179,11 +1180,7 @@
                 tabIndex = -1;
             }
 
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                window.runCommand(this.value);
-            }
-            else if (e.key === 'ArrowUp') {
+            if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (histIdx < history.length - 1) {
                     histIdx++;
@@ -1201,6 +1198,11 @@
                 }
                 updateCursor();
             }
+        });
+
+        terminalForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            window.runCommand(input.value);
         });
 
         // ---------------------------------------------------------
