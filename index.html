@@ -533,7 +533,6 @@
             <li><a href="#experience">Experience</a></li>
             <li><a href="#education">Education</a></li>
             <li><a href="#publications">Publications</a></li>
-            <li><a href="#projects">Projects</a></li>
             <li><a href="#cv">CV</a></li>
         </ul>
     </div>
@@ -580,34 +579,37 @@
 
                 <div class="exp-item">
                     <h3>Freelance Software Developer</h3>
-                    <div class="meta">Automated Middleware &amp; ERP Integration · Campus Five · Sep 2025 – Present</div>
-                    <p>
-                        Built real-time middleware to sync sales, returns, and inventory between local ERP
-                        and Shopify. Automated catalog management including product drafting, publishing,
-                        and archiving. Engineered end-to-end system architecture using Google Cloud Functions
-                        and Firestore.
-                    </p>
-                    <div class="tags">
-                        <span class="tag">Google Cloud</span>
-                        <span class="tag">Firestore</span>
-                        <span class="tag">Shopify API</span>
-                        <span class="tag">Node.js</span>
+                    <div class="meta">Campus Five · Sep 2025 – Present</div>
+                    
+                    <div style="margin-top: 1.2rem;">
+                        <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem;">Automated Middleware &amp; ERP Integration</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 0.6rem;">
+                            Built real-time middleware to sync sales, returns, and inventory between local ERP
+                            and Shopify. Automated catalog management including product drafting, publishing,
+                            and archiving. Engineered end-to-end system architecture using Google Cloud Functions
+                            and Firestore.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Google Cloud</span>
+                            <span class="tag">Firestore</span>
+                            <span class="tag">Shopify API</span>
+                            <span class="tag">Node.js</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="exp-item">
-                    <h3>Freelance Software Developer</h3>
-                    <div class="meta">AI-Driven Sales Automation · Campus Five · Sep 2025 – Present</div>
-                    <p>
-                        Implemented OCR data extraction for vehicle documents to support an automated
-                        sales pipeline. Assisted in deploying an AI chatbot for inquiries and built
-                        a staff verification dashboard.
-                    </p>
-                    <div class="tags">
-                        <span class="tag">OCR</span>
-                        <span class="tag">AI Chatbot</span>
-                        <span class="tag">Python</span>
-                        <span class="tag">Dashboard</span>
+                    <div style="margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px dashed var(--border);">
+                        <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.2rem;">AI-Driven Sales Automation</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 0.6rem;">
+                            Implemented OCR data extraction for vehicle documents to support an automated
+                            sales pipeline. Assisted in deploying an AI chatbot for inquiries and built
+                            a staff verification dashboard.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">OCR</span>
+                            <span class="tag">AI Chatbot</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">Dashboard</span>
+                        </div>
                     </div>
                 </div>
 
@@ -642,7 +644,7 @@
 
                 <div class="edu-item">
                     <h3>B.Sc. Computer Science · <span class="accent">University of Konstanz</span></h3>
-                    <div class="meta">Specialization: Data Science &amp; HCI · GPA: 1.4 · Oct 2021 – Mar 2025</div>
+                    <div class="meta">Specialization: Data Science &amp; HCI · GPA: 1.4 · Oct 2021 – May 2027</div>
                     <p class="thesis-note">Thesis (1.0): Developed a hybrid input device for 2D/3D interaction</p>
                 </div>
             </section>
@@ -658,40 +660,6 @@
                         Software and Technology (VRST '25)</em>.
                         <br><a href="https://doi.org/10.1145/3756884.3766047" target="_blank" style="font-size: 0.85rem; margin-top: 0.4rem; display: inline-block;">DOI: 10.1145/3756884.3766047</a>
                     </p>
-                </div>
-            </section>
-
-            <section id="projects">
-                <h2 class="section-title">Projects</h2>
-
-                <div class="project-card">
-                    <h3><a href="#">SpatialMouse — Hybrid 2D/3D Pointing Device</a></h3>
-                    <div class="meta">Human-Computer Interaction · Hardware Prototyping</div>
-                    <p>
-                        Designed and built a hybrid input device enabling seamless interaction
-                        across 2D desktop and 3D spatial environments. Combined 3D CAD modeling,
-                        Arduino hardware, and a Unity virtual test environment. Published at VRST '25.
-                    </p>
-                    <div class="tags">
-                        <span class="tag">Arduino</span>
-                        <span class="tag">Unity</span>
-                        <span class="tag">C</span>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <h3><a href="#">Real-Time ERP–Shopify Middleware</a></h3>
-                    <div class="meta">Cloud Architecture · Integration Engineering</div>
-                    <p>
-                        Architected serverless middleware on Google Cloud Functions to synchronize
-                        sales, returns, and inventory data between local ERP and Shopify in real time.
-                        Automated the full product lifecycle from drafting to archival.
-                    </p>
-                    <div class="tags">
-                        <span class="tag">Google Cloud</span>
-                        <span class="tag">Firestore</span>
-                        <span class="tag">Shopify</span>
-                    </div>
                 </div>
             </section>
 
@@ -889,7 +857,6 @@
                     'experience': { type: 'dir' },
                     'education': { type: 'dir' },
                     'publications': { type: 'dir' },
-                    'projects': { type: 'dir' },
                     'skills': { type: 'dir' },
                     '.env': { type: 'file', content: 'USER=robin<br>ROLE=developer<br>COFFEE_LEVEL=low<br>ROOT_ACCESS=false<br>SECRET_KEY=hunter2' },
                     'contact.txt': { type: 'file', content: 'Email: robin.erb2000@gmail.com<br>LinkedIn: https://www.linkedin.com/in/robin-erb-134b9a328/<br>GitHub: https://github.com/robinerb' },
@@ -906,9 +873,6 @@
                 },
                 '~/publications': {
                     'publications.txt': { type: 'file', content: 'S. Hubenschmid, J. Zagermann, <b>R. Erb</b>, et al.<br>"SpatialMouse: A Hybrid Pointing Device..." (VRST \'25)' }
-                },
-                '~/projects': {
-                    'projects.txt': { type: 'file', content: '<b>SpatialMouse</b> — Hybrid 2D/3D Pointing Device<br><b>Real-Time ERP–Shopify Middleware</b>' }
                 },
                 '~/skills': {
                     'skills.txt': { type: 'file', content: '<b>Languages:</b> Python, Java, C++, SQL, R<br><b>ML/AI:</b> PyTorch, Scikit-learn, Pandas' }
@@ -1331,7 +1295,7 @@
                     const items = Object.keys(fileSystem[lsTarget] || {});
                     
                     if (lsTarget === '~') {
-                        const rootOrder = ['about', 'experience', 'education', 'publications', 'projects', 'skills', 'contact.txt', 'cv.pdf', '.env'];
+                        const rootOrder = ['about', 'experience', 'education', 'publications', 'skills', 'contact.txt', 'cv.pdf', '.env'];
                         items.sort((a, b) => {
                             let idxA = rootOrder.indexOf(a);
                             let idxB = rootOrder.indexOf(b);
@@ -1788,7 +1752,6 @@
             { id: 'experience', title: 'Go to Experience', icon: '💼', desc: 'Section', action: () => { window.location.hash = 'experience'; } },
             { id: 'education', title: 'Go to Education', icon: '🎓', desc: 'Section', action: () => { window.location.hash = 'education'; } },
             { id: 'publications', title: 'Go to Publications', icon: '📚', desc: 'Section', action: () => { window.location.hash = 'publications'; } },
-            { id: 'projects', title: 'Go to Projects', icon: '🚀', desc: 'Section', action: () => { window.location.hash = 'projects'; } },
             { id: 'skills', title: 'Go to Skills', icon: '🛠', desc: 'Section', action: () => { window.location.hash = 'skills'; } },
             { id: 'cv', title: 'Download CV', icon: '📄', desc: 'Document', action: () => window.open('Robin_Erb_CV.pdf', '_blank') },
             { id: 'terminal', title: 'Open Terminal', icon: '💻', desc: 'App', action: window.openTerminal },
@@ -1841,7 +1804,7 @@
         ];
 
         // The default actions to show at the top when query is empty
-        const defaultActionIds = ['about', 'projects', 'terminal', 'weather-hint', 'math-hint', 'cv', 'copy-email', 'github', 'linkedin', 'theme-dark'];
+        const defaultActionIds = ['about', 'terminal', 'weather-hint', 'math-hint', 'cv', 'copy-email', 'github', 'linkedin', 'theme-dark'];
 
         window.toggleSpotlight = function() {
             spotlightActive = !spotlightActive;
