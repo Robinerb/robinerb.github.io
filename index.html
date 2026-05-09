@@ -564,13 +564,13 @@
                 <p>
                     I'm a computer science graduate student at Heidelberg University specializing
                     in Machine Learning, currently on a semester abroad at the University of Copenhagen.
-                    My work spans deep learning, computer vision, and scalable data science. I've built
-                    real-time middleware systems, AI-driven sales automation pipelines, and hybrid
-                    input devices for spatial interaction. I'm passionate about turning research into
-                    production-grade systems.
+                    I'm interested in building automation AI systems to enhance workflows, much like the 
+                    freelance work I do. I am also interested in researching how to use Reinforcement Learning 
+                    and hyperparameter optimization to make neural networks more efficient and smaller, 
+                    which is the focus of my master's thesis.
                 </p>
                 <p class="interests">
-                    <strong>Interests:</strong> Deep Learning, Computer Vision, Cloud Architecture, Data Science
+                    <strong>Interests:</strong> Machine Learning, Neural Network Efficiency, Reinforcement Learning, Cloud Architecture, Data Science
                 </p>
             </section>
 
@@ -639,12 +639,12 @@
 
                 <div class="edu-item">
                     <h3>M.Sc. Data and Computer Science · <span class="accent">Heidelberg University</span></h3>
-                    <div class="meta">Specialization: Machine Learning · GPA: 1.3 · Apr 2025 – Jun 2027</div>
+                    <div class="meta">Specialization: Machine Learning · GPA: 1.3 · Apr 2025 – May 2027</div>
                 </div>
 
                 <div class="edu-item">
                     <h3>B.Sc. Computer Science · <span class="accent">University of Konstanz</span></h3>
-                    <div class="meta">Specialization: Data Science &amp; HCI · GPA: 1.4 · Oct 2021 – May 2027</div>
+                    <div class="meta">Specialization: Data Science &amp; HCI · GPA: 1.4 · Oct 2021 – Mar 2025</div>
                     <p class="thesis-note">Thesis (1.0): Developed a hybrid input device for 2D/3D interaction</p>
                 </div>
             </section>
@@ -863,7 +863,7 @@
                     'cv.pdf': { type: 'file', action: 'cv' }
                 },
                 '~/about': {
-                    'about.txt': { type: 'file', content: 'M.Sc. Data and Computer Science student at Heidelberg University.<br>Specializing in Deep Learning & Cloud Architecture.' }
+                    'about.txt': { type: 'file', content: 'M.Sc. Data and Computer Science student at Heidelberg University.<br>Interested in AI automation, freelance workflows, and researching RL/HPO for neural network efficiency.' }
                 },
                 '~/experience': {
                     'experience.txt': { type: 'file', content: '<b>Freelance Software Developer</b> — Campus Five<br><b>Student Assistant</b> — University of Konstanz' }
@@ -1742,9 +1742,9 @@
         let currentFilteredActions = [];
 
         // Global texts for Language toggles
-        const aboutEN = `I'm a computer science graduate student at Heidelberg University specializing in Machine Learning, currently on a semester abroad at the University of Copenhagen. My work spans deep learning, computer vision, and scalable data science. I've built real-time middleware systems, AI-driven sales automation pipelines, and hybrid input devices for spatial interaction. I'm passionate about turning research into production-grade systems.`;
-        const aboutDE = `Ich bin Informatik-Masterstudent an der Universität Heidelberg mit Spezialisierung auf Machine Learning und absolviere derzeit ein Auslandssemester an der Universität Kopenhagen. Meine Arbeit umfasst Deep Learning, Computer Vision und skalierbare Data Science. Ich habe Echtzeit-Middleware-Systeme, KI-gesteuerte Vertriebsautomatisierungs-Pipelines und hybride Eingabegeräte für räumliche Interaktion entwickelt. Ich brenne dafür, Forschung in produktionsreife Systeme umzusetzen.`;
-        const aboutDA = `Jeg læser til en kandidat i datalogi på Heidelberg Universitet med speciale i maskinlæring, og er i øjeblikket på udvekslingssemester på Københavns Universitet. Mit arbejde spænder over deep learning, computervision og skalerbar data science. Jeg har bygget realtids middleware-systemer, AI-drevne salgsautomatiseringer og hybride inputenheder for rumlig interaktion. Jeg brænder for at omdanne forskning til produktionsklare systemer.`;
+        const aboutEN = `I'm a computer science graduate student at Heidelberg University specializing in Machine Learning, currently on a semester abroad at the University of Copenhagen. I'm interested in building automation AI systems to enhance workflows, much like the freelance work I do. I am also interested in researching how to use Reinforcement Learning and hyperparameter optimization to make neural networks more efficient and smaller, which is the focus of my master's thesis.`;
+        const aboutDE = `Ich bin Informatik-Masterstudent an der Universität Heidelberg mit Spezialisierung auf Machine Learning und absolviere derzeit ein Auslandssemester an der Universität Kopenhagen. Ich interessiere mich für die Entwicklung von KI-Automatisierungssystemen zur Optimierung von Workflows, ähnlich wie bei meiner freiberuflichen Arbeit. Außerdem erforsche ich, wie man Reinforcement Learning und Hyperparameter-Optimierung nutzen kann, um neuronale Netze effizienter und kleiner zu machen – das Thema meiner Masterarbeit.`;
+        const aboutDA = `Jeg læser til en kandidat i datalogi på Heidelberg Universitet med speciale i maskinlæring, og er i øjeblikket på udvekslingssemester på Københavns Universitet. Jeg er interesseret i at bygge AI-automatiseringssystemer for at forbedre workflows, i stil med mit freelancearbejde. Derudover forsker jeg i at bruge reinforcement learning og hyperparameter-optimering til at gøre neurale netværk mere effektive og mindre, hvilket er emnet for mit speciale.`;
 
         // Full list of static actions
         const actionsData = [
