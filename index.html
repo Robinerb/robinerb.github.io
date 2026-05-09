@@ -550,9 +550,8 @@
             <p class="my-title">M.Sc. Data &amp; Computer Science</p>
 
             <ul class="sidebar-links">
-                <li>📍 Heidelberg / Copenhagen</li>
+                <li>📍 <a href="https://maps.google.com/?q=Heidelberg" target="_blank" style="color:var(--text-secondary); text-decoration: underline;">Heidelberg</a> / <a href="https://maps.google.com/?q=Copenhagen" target="_blank" style="color:var(--text-secondary); text-decoration: underline;">Copenhagen</a></li>
                 <li><a href="mailto:robin.erb2000@gmail.com">Email</a></li>
-                <li><a href="https://github.com/robinerb" target="_blank">GitHub</a></li>
                 <li><a href="https://www.linkedin.com/in/robin-erb-134b9a328/" target="_blank">LinkedIn</a></li>
             </ul>
         </aside>
@@ -577,7 +576,7 @@
             <section id="experience">
                 <h2 class="section-title">Experience</h2>
 
-                <div class="exp-item">
+                <div class="exp-item" onclick="window.open('https://campusfive.de/', '_blank')" style="cursor: pointer;" title="Open Campus Five website">
                     <h3>Freelance Software Developer</h3>
                     <div class="meta">Campus Five · Sep 2025 – Present</div>
                     
@@ -613,7 +612,7 @@
                     </div>
                 </div>
 
-                <div class="exp-item">
+                <div class="exp-item" onclick="window.open('https://hci.uni-konstanz.de/', '_blank')" style="cursor: pointer;" title="Open HCI Department website">
                     <h3>Student Assistant · HCI Department</h3>
                     <div class="meta">University of Konstanz · Sep 2023 – Mar 2025</div>
                     <p>
@@ -633,17 +632,17 @@
                 <h2 class="section-title">Education</h2>
 
                 <div class="edu-item">
-                    <h3>Semester Abroad · <span class="accent">University of Copenhagen</span></h3>
+                    <h3>Semester Abroad · <a href="https://www.ku.dk/english/" target="_blank" class="accent">University of Copenhagen</a></h3>
                     <div class="meta">M.Sc. Computer Science · Feb 2026 – Jul 2026</div>
                 </div>
 
                 <div class="edu-item">
-                    <h3>M.Sc. Data and Computer Science · <span class="accent">Heidelberg University</span></h3>
+                    <h3>M.Sc. Data and Computer Science · <a href="https://www.uni-heidelberg.de/en" target="_blank" class="accent">Heidelberg University</a></h3>
                     <div class="meta">Specialization: Machine Learning · GPA: 1.3 · Apr 2025 – May 2027</div>
                 </div>
 
                 <div class="edu-item">
-                    <h3>B.Sc. Computer Science · <span class="accent">University of Konstanz</span></h3>
+                    <h3>B.Sc. Computer Science · <a href="https://www.uni-konstanz.de/en/" target="_blank" class="accent">University of Konstanz</a></h3>
                     <div class="meta">Specialization: Data Science &amp; HCI · GPA: 1.4 · Oct 2021 – Mar 2025</div>
                     <p class="thesis-note">Thesis (1.0): Developed a hybrid input device for 2D/3D interaction</p>
                 </div>
@@ -652,13 +651,13 @@
             <section id="publications">
                 <h2 class="section-title">Publications</h2>
 
-                <div class="pub-item">
+                <div class="pub-item" onclick="window.open('https://dl.acm.org/doi/10.1145/3756884.3766047', '_blank')" style="cursor: pointer;" title="View Publication">
                     <p>
                         S. Hubenschmid, J. Zagermann, <strong>R. Erb</strong>, et al.
                         "SpatialMouse: A Hybrid Pointing Device for Seamless Interaction Across
                         2D and 3D Spaces." In <em>Proc. of the 31st ACM Symposium on Virtual Reality
                         Software and Technology (VRST '25)</em>.
-                        <br><a href="https://doi.org/10.1145/3756884.3766047" target="_blank" style="font-size: 0.85rem; margin-top: 0.4rem; display: inline-block;">DOI: 10.1145/3756884.3766047</a>
+                        <br><span style="font-size: 0.85rem; margin-top: 0.4rem; display: inline-block; color: var(--accent);">DOI: 10.1145/3756884.3766047</span>
                     </p>
                 </div>
             </section>
@@ -859,7 +858,7 @@
                     'publications': { type: 'dir' },
                     'skills': { type: 'dir' },
                     '.env': { type: 'file', content: 'USER=robin<br>ROLE=developer<br>COFFEE_LEVEL=low<br>ROOT_ACCESS=false<br>SECRET_KEY=hunter2' },
-                    'contact.txt': { type: 'file', content: 'Email: robin.erb2000@gmail.com<br>LinkedIn: https://www.linkedin.com/in/robin-erb-134b9a328/<br>GitHub: https://github.com/robinerb' },
+                    'contact.txt': { type: 'file', content: 'Email: robin.erb2000@gmail.com<br>LinkedIn: https://www.linkedin.com/in/robin-erb-134b9a328/' },
                     'cv.pdf': { type: 'file', action: 'cv' }
                 },
                 '~/about': {
@@ -1260,7 +1259,7 @@
 <div class="help-row"><div class="help-cmd">stop</div><div class="help-desc">Terminate all active sub-processes</div></div>
 <div class="help-row"><div class="help-cmd">clear</div><div class="help-desc">Clear terminal output</div></div>
 <div class="help-row"><div class="help-cmd">exit</div><div class="help-desc">Close terminal</div></div>
-`);
+`.replace(/\n/g, ''));
                     break;
                 }
                 case 'pwd': {
@@ -1773,7 +1772,6 @@
             }},
 
             { id: 'linkedin', title: 'LinkedIn Profile', icon: '🔗', desc: 'External', action: () => window.open('https://www.linkedin.com/in/robin-erb-134b9a328/', '_blank') },
-            { id: 'github', title: 'GitHub Profile', icon: '🔗', desc: 'External', action: () => window.open('https://github.com/robinerb', '_blank') },
             
             { id: 'theme-light', title: 'Set Light Theme', icon: '☀️', desc: 'Appearance', action: () => { document.body.className = ''; window.preMatrixTheme = ''; } },
             { id: 'theme-dark', title: 'Set Dark Theme', icon: '🌙', desc: 'Appearance', action: () => { document.body.className = 'theme-dark'; window.preMatrixTheme = 'theme-dark'; } },
@@ -1804,7 +1802,7 @@
         ];
 
         // The default actions to show at the top when query is empty
-        const defaultActionIds = ['about', 'terminal', 'weather-hint', 'math-hint', 'cv', 'copy-email', 'github', 'linkedin', 'theme-dark'];
+        const defaultActionIds = ['about', 'terminal', 'weather-hint', 'math-hint', 'cv', 'copy-email', 'linkedin', 'theme-dark'];
 
         window.toggleSpotlight = function() {
             spotlightActive = !spotlightActive;
