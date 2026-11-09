@@ -447,7 +447,8 @@
         /* Publications */
         .pub-authors { margin-top: 14px; color: var(--text-secondary); }
         .pub-authors strong { color: var(--text); font-weight: 600; }
-        .doi { display: inline-block; margin-top: 10px; font-size: 15px; }
+        .card-links { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 22px; margin-top: 14px; font-size: 15px; }
+        .card-links .link-more { font-size: 15px; }
 
         /* Tags & skills */
         .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
@@ -573,6 +574,91 @@
             border-top: 1px solid var(--separator); font-size: 12px; color: var(--muted);
         }
         .spotlight-footer .kbd { margin-right: 3px; }
+
+        /* ================================================================
+           GAMES (3D dice & coin HUD)
+           ================================================================ */
+        #game-overlay {
+            position: fixed; inset: 0; z-index: 9998; display: flex; align-items: center; justify-content: center;
+            padding: 16px; background: var(--overlay); opacity: 0; pointer-events: none; transition: opacity 0.25s var(--ease);
+        }
+        #game-overlay.active { opacity: 1; pointer-events: auto; }
+        #game-hud {
+            width: 100%; max-width: 380px; padding: 16px 22px 20px; border-radius: 28px; text-align: center;
+            background: var(--glass-bg); backdrop-filter: saturate(180%) blur(40px); -webkit-backdrop-filter: saturate(180%) blur(40px);
+            border: 1px solid var(--glass-border); box-shadow: 0 0 0 0.5px var(--glass-edge), var(--shadow-lg);
+            transform: scale(0.92) translateY(10px); transition: transform 0.45s var(--spring);
+        }
+        #game-overlay.active #game-hud { transform: none; }
+        .game-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .game-head::before { content: ""; width: 28px; }
+        .game-title { font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+        .game-close {
+            width: 28px; height: 28px; border-radius: 50%; border: none; cursor: pointer; display: grid; place-items: center;
+            background: var(--fill-strong); color: var(--muted); transition: background 0.2s var(--ease);
+        }
+        .game-close:hover { background: var(--separator); color: var(--text); }
+        .game-close svg { width: 12px; height: 12px; stroke-width: 2.6; }
+        .game-stage { height: 216px; display: flex; align-items: flex-end; justify-content: center; gap: 30px; padding-bottom: 14px; perspective: 900px; }
+        .game-result {
+            font-family: var(--font-display); font-size: 30px; font-weight: 700; letter-spacing: -0.03em;
+            line-height: 1.2; min-height: 36px; color: var(--text); font-variant-numeric: tabular-nums;
+        }
+        .game-result.pop { animation: resultPop 0.55s var(--spring); }
+        @keyframes resultPop { 0% { opacity: 0; transform: scale(0.6); } 100% { opacity: 1; transform: none; } }
+        .game-stats { margin-top: 4px; min-height: 18px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+        .segmented { display: inline-flex; margin-top: 16px; padding: 2px; border-radius: 9px; background: var(--fill-strong); }
+        .segmented[hidden] { display: none; }
+        .segmented button {
+            border: none; background: transparent; font: inherit; font-size: 13px; font-weight: 500; letter-spacing: -0.01em;
+            padding: 4px 16px; border-radius: 7px; color: var(--text); cursor: pointer; transition: background 0.2s var(--ease);
+        }
+        .segmented button[aria-pressed="true"] { background: var(--surface); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14), 0 0 0 0.5px rgba(0, 0, 0, 0.04); }
+        .game-actions { margin-top: 16px; }
+        .game-actions .btn { width: 100%; justify-content: center; }
+        .btn:disabled { opacity: 0.55; cursor: default; transform: none; }
+        .game-hint { margin-top: 10px; font-size: 12px; color: var(--muted); }
+        @media (hover: none) { .game-hint { display: none; } }
+
+        .game-piece { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .piece-shadow { width: 80%; height: 12px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.28), transparent 70%); }
+        @keyframes dieToss { 0% { transform: translateY(0); } 35% { transform: translateY(-58px); } 68% { transform: translateY(0); } 82% { transform: translateY(-10px); } 100% { transform: translateY(0); } }
+        @keyframes coinToss { 0% { transform: translateY(0) scale(1); } 45% { transform: translateY(-58px) scale(1.06); } 84% { transform: translateY(0) scale(1); } 92% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+        @keyframes shadowToss { 0%, 100% { transform: scale(1); opacity: 1; } 40% { transform: scale(0.5); opacity: 0.45; } }
+        .die-piece.tossing .toss { animation: dieToss 1.1s var(--ease); }
+        .coin-piece.tossing .toss { animation: coinToss 1.3s cubic-bezier(0.3, 0.6, 0.4, 1); }
+        .game-piece.tossing .piece-shadow { animation: shadowToss 1.2s var(--ease); }
+
+        .die { position: relative; width: 84px; height: 84px; transform-style: preserve-3d; transition: transform 1.1s cubic-bezier(0.2, 0.8, 0.25, 1); }
+        .die-face {
+            position: absolute; inset: 0; border-radius: 16px; padding: 13px;
+            display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+            background: linear-gradient(145deg, #ffffff 0%, #ececf1 100%);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06), inset 0 -5px 12px rgba(0, 0, 0, 0.07);
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        }
+        .die-face.f1 { transform: translateZ(42px); }
+        .die-face.f6 { transform: rotateY(180deg) translateZ(42px); }
+        .die-face.f3 { transform: rotateY(90deg) translateZ(42px); }
+        .die-face.f4 { transform: rotateY(-90deg) translateZ(42px); }
+        .die-face.f5 { transform: rotateX(90deg) translateZ(42px); }
+        .die-face.f2 { transform: rotateX(-90deg) translateZ(42px); }
+        .pip { width: 13px; height: 13px; border-radius: 50%; align-self: center; justify-self: center; background: #1d1d1f; box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.55); }
+        .f1 .pip { width: 20px; height: 20px; background: #ff3b30; }
+        .p-tl { grid-area: 1 / 1; } .p-tr { grid-area: 1 / 3; } .p-ml { grid-area: 2 / 1; } .p-c { grid-area: 2 / 2; }
+        .p-mr { grid-area: 2 / 3; } .p-bl { grid-area: 3 / 1; } .p-br { grid-area: 3 / 3; }
+
+        .coin { position: relative; width: 112px; height: 112px; transform-style: preserve-3d; transition: transform 1.3s cubic-bezier(0.25, 0.75, 0.3, 1); }
+        .coin-face {
+            position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            font-family: var(--font-display); color: #7a5200;
+            background: radial-gradient(circle at 34% 28%, #fff5cc 0%, #f8d465 30%, #dcaa28 66%, #b8860f 100%);
+            box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.35), inset 0 0 0 8px rgba(140, 95, 0, 0.3), 0 8px 22px rgba(0, 0, 0, 0.18);
+        }
+        .coin-face.back { transform: rotateY(180deg); }
+        .coin-face span { font-size: 38px; font-weight: 700; letter-spacing: -0.04em; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 -1px 0 rgba(120, 80, 0, 0.35); }
+        .coin-face small { position: absolute; bottom: 20px; font-size: 9px; font-weight: 700; letter-spacing: 0.22em; opacity: 0.75; }
 
         /* ================================================================
            TERMINAL (macOS window)
@@ -779,6 +865,7 @@
             html { scroll-behavior: auto; }
             .js .reveal { opacity: 1; transform: none; transition: none; }
             .card, .dock-item, #terminal-window, #spotlight-modal { transition: none !important; }
+            .die, .coin, .game-piece .toss, .piece-shadow { transition: none !important; animation: none !important; }
         }
     </style>
 </head>
@@ -854,19 +941,19 @@
     <section id="experience" class="section reveal">
         <h2 class="section-title">Experience</h2>
 
-        <article class="card is-link" data-href="https://campusfive.de/" title="Open Campus Five website">
+        <article class="card is-link" data-href="https://campusfive.de/" title="Open campus.five website">
             <div class="card-header">
                 <div>
                     <h3>Freelance Software Developer</h3>
-                    <div class="meta">Campus Five · Sep 2025 – Present</div>
+                    <div class="meta">campus.five · Sep 2025 – Present</div>
                 </div>
-                <a class="ext-link" href="https://campusfive.de/" target="_blank" rel="noopener" aria-label="Open Campus Five website">
+                <a class="ext-link" href="https://campusfive.de/" target="_blank" rel="noopener" aria-label="Open campus.five website">
                     <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
                 </a>
             </div>
 
             <div class="projects">
-                <div class="project" data-search-title="ERP & Shopify Integration · Campus Five">
+                <div class="project" data-search-title="ERP & Shopify Integration · campus.five">
                     <div class="project-head">
                         <span class="project-icon tile-green"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5M3 21v-5h5"/></svg></span>
                         <h4>ERP &amp; Shopify Integration</h4>
@@ -884,7 +971,7 @@
                     </div>
                 </div>
 
-                <div class="project" data-search-title="Sales Automation · Campus Five">
+                <div class="project" data-search-title="Sales Automation · campus.five">
                     <div class="project-head">
                         <span class="project-icon tile-orange"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
                         <h4>Sales Automation</h4>
@@ -900,7 +987,7 @@
                     </div>
                 </div>
 
-                <div class="project" data-search-title="Sales & Operations Dashboard · Campus Five">
+                <div class="project" data-search-title="Sales & Operations Dashboard · campus.five">
                     <div class="project-head">
                         <span class="project-icon tile-purple"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></span>
                         <h4>Sales &amp; Operations Dashboard</h4>
@@ -938,6 +1025,9 @@
                 <span class="tag">Arduino</span>
                 <span class="tag">C</span>
             </div>
+            <div class="card-links">
+                <a class="link-more" href="https://github.com/hcigroupkonstanz/SpatialMouse" target="_blank" rel="noopener">SpatialMouse on GitHub</a>
+            </div>
         </article>
     </section>
 
@@ -948,7 +1038,7 @@
                 <span class="project-icon tile-blue"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
                 <div class="list-body">
                     <h3>M.Sc. Data and Computer Science · <a href="https://www.uni-heidelberg.de/en" target="_blank" rel="noopener">Heidelberg University</a><span class="badge badge-current">Current</span></h3>
-                    <div class="meta">Specialization: Machine Learning · GPA: 1.4 (German scale) · Apr 2025 – May 2027</div>
+                    <div class="meta">Specialization: Machine Learning · GPA: 1.4 (German scale) · Apr 2025 – Jul 2027</div>
                     <p class="thesis-note">My master’s thesis explores how reinforcement learning and hyperparameter optimization can make neural networks smaller and more efficient.</p>
                 </div>
             </div>
@@ -1002,44 +1092,69 @@
                 </a>
             </div>
             <p class="pub-authors">S. Hubenschmid, J. Zagermann, <strong>R. Erb</strong>, et al.</p>
-            <a class="doi" href="https://dl.acm.org/doi/10.1145/3756884.3766047" target="_blank" rel="noopener">DOI: 10.1145/3756884.3766047</a>
+            <div class="card-links">
+                <a href="https://dl.acm.org/doi/10.1145/3756884.3766047" target="_blank" rel="noopener">DOI: 10.1145/3756884.3766047</a>
+                <a class="link-more" href="https://github.com/hcigroupkonstanz/SpatialMouse" target="_blank" rel="noopener">Code on GitHub</a>
+            </div>
         </article>
     </section>
 
     <section id="skills" class="section reveal">
         <h2 class="section-title">Skills</h2>
         <div class="skills-grid">
-            <div class="card skill-group" data-search-title="Skills · Languages">
-                <h4>Languages</h4>
+            <div class="card skill-group" data-search-title="Skills · Programming">
+                <h4>Programming</h4>
                 <div class="tags">
                     <span class="tag">Python</span>
                     <span class="tag">Java</span>
+                    <span class="tag">C</span>
                     <span class="tag">C++</span>
                     <span class="tag">SQL</span>
                     <span class="tag">R</span>
                 </div>
             </div>
-            <div class="card skill-group" data-search-title="Skills · ML & AI">
-                <h4>ML &amp; AI</h4>
+            <div class="card skill-group" data-search-title="Skills · ML & Data">
+                <h4>ML &amp; Data</h4>
                 <div class="tags">
                     <span class="tag">PyTorch</span>
-                    <span class="tag">Scikit-learn</span>
-                    <span class="tag">Pandas</span>
+                    <span class="tag">scikit-learn</span>
+                    <span class="tag">pandas</span>
+                    <span class="tag">OCR</span>
+                </div>
+            </div>
+            <div class="card skill-group" data-search-title="Skills · Agentic Coding">
+                <h4>Agentic Coding</h4>
+                <div class="tags">
+                    <span class="tag">OpenAI Codex</span>
+                    <span class="tag">Claude Code</span>
+                    <span class="tag">Antigravity</span>
+                </div>
+            </div>
+            <div class="card skill-group" data-search-title="Skills · App Development">
+                <h4>App Development</h4>
+                <div class="tags">
+                    <span class="tag">Vercel</span>
+                    <span class="tag">Supabase</span>
+                    <span class="tag">Cloudflare</span>
                 </div>
             </div>
             <div class="card skill-group" data-search-title="Skills · Cloud & Tools">
                 <h4>Cloud &amp; Tools</h4>
                 <div class="tags">
-                    <span class="tag">Google Cloud</span>
-                    <span class="tag">Docker</span>
+                    <span class="tag">Google Cloud Functions</span>
+                    <span class="tag">Firestore</span>
                     <span class="tag">Git</span>
+                    <span class="tag">Docker</span>
+                    <span class="tag">Unity</span>
+                    <span class="tag">CAD</span>
                 </div>
             </div>
-            <div class="card skill-group" data-search-title="Skills · Spoken Languages">
-                <h4>Spoken Languages</h4>
+            <div class="card skill-group" data-search-title="Skills · Languages">
+                <h4>Languages</h4>
                 <div class="tags">
                     <span class="tag">German (Native)</span>
                     <span class="tag">English (Fluent)</span>
+                    <span class="tag">French (Basic)</span>
                 </div>
             </div>
         </div>
@@ -1139,6 +1254,27 @@
             <button onclick="closeNano(false)">^X Exit</button>
             <button onclick="saveNano()">^O Write Out</button>
         </div>
+    </div>
+</div>
+
+<!-- Games HUD -->
+<div id="game-overlay" aria-hidden="true">
+    <div id="game-hud" role="dialog" aria-modal="true" aria-labelledby="game-title">
+        <div class="game-head">
+            <span class="game-title" id="game-title">Roll the Dice</span>
+            <button class="game-close" id="game-close" type="button" aria-label="Close">
+                <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="game-stage" id="game-stage"></div>
+        <div class="game-result" id="game-result" aria-live="polite">&nbsp;</div>
+        <div class="game-stats" id="game-stats"></div>
+        <div class="segmented" id="dice-count" role="group" aria-label="Number of dice">
+            <button type="button" data-n="1" aria-pressed="true">1 Die</button>
+            <button type="button" data-n="2" aria-pressed="false">2 Dice</button>
+        </div>
+        <div class="game-actions"><button class="btn btn-primary" id="game-again" type="button">Roll Again</button></div>
+        <div class="game-hint">Press <span class="kbd">Space</span> to play again · <span class="kbd">esc</span> to close</div>
     </div>
 </div>
 
@@ -1258,19 +1394,19 @@
                     'about.txt': { type: 'file', content: 'M.Sc. Data &amp; Computer Science @ Heidelberg University | Machine Learning | Freelance Software Developer<br><br>Based in Heidelberg, Germany. Completed a semester abroad at the University of Copenhagen (Feb–Jul 2026);<br>back at Heidelberg University since Aug 2026.<br>Interested in AI-driven automation systems that improve workflows.<br>Master\'s thesis: how reinforcement learning and hyperparameter optimization can make neural networks smaller and more efficient.' }
                 },
                 '~/experience': {
-                    'experience.txt': { type: 'file', content: '<b>Freelance Software Developer</b> — Campus Five (Sep 2025 – Present)<br>  • ERP &amp; Shopify integration: real-time sync of sales, returns, and inventory (Google Cloud Functions, Firestore)<br>  • Sales automation: OCR for vehicle documents and a chatbot for inquiries<br>  • Sales &amp; operations dashboard: automatic file generation, WhatsApp integration, data analysis tools<br><br><b>Student Assistant, HCI Department</b> — University of Konstanz (Sep 2023 – Mar 2025)' }
+                    'experience.txt': { type: 'file', content: '<b>Freelance Software Developer</b> — campus.five (Sep 2025 – Present)<br>  • ERP &amp; Shopify integration: real-time sync of sales, returns, and inventory (Google Cloud Functions, Firestore)<br>  • Sales automation: OCR for vehicle documents and a chatbot for inquiries<br>  • Sales &amp; operations dashboard: automatic file generation, WhatsApp integration, data analysis tools<br><br><b>Student Assistant, HCI Department</b> — University of Konstanz (Sep 2023 – Mar 2025)' }
                 },
                 '~/education': {
-                    'education.txt': { type: 'file', content: '<b>M.Sc. Data and Computer Science</b> — Heidelberg University (Apr 2025 – May 2027, current)<br>  Specialization: Machine Learning · GPA: 1.4 (German scale)<br>  Thesis: RL and hyperparameter optimization for smaller, more efficient neural networks<br><b>Semester Abroad, M.Sc. Computer Science</b> — University of Copenhagen (Feb 2026 – Jul 2026, completed)<br><b>B.Sc. Computer Science</b> — University of Konstanz (Oct 2021 – Mar 2025) · GPA: 1.4' }
+                    'education.txt': { type: 'file', content: '<b>M.Sc. Data and Computer Science</b> — Heidelberg University (Apr 2025 – Jul 2027, current)<br>  Specialization: Machine Learning · GPA: 1.4 (German scale)<br>  Thesis: RL and hyperparameter optimization for smaller, more efficient neural networks<br><b>Semester Abroad, M.Sc. Computer Science</b> — University of Copenhagen (Feb 2026 – Jul 2026, completed)<br><b>B.Sc. Computer Science</b> — University of Konstanz (Oct 2021 – Mar 2025) · GPA: 1.4' }
                 },
                 '~/volunteering': {
                     'volunteering.txt': { type: 'file', content: '<b>Federal Voluntary Service (Bundesfreiwilligendienst, BFD)</b> — Kletterwerk Radolfzell<br>September 2020 – August 2021 · Radolfzell am Bodensee, Germany (on-site)' }
                 },
                 '~/publications': {
-                    'publications.txt': { type: 'file', content: 'S. Hubenschmid, J. Zagermann, <b>R. Erb</b>, et al.<br>"SpatialMouse: A Hybrid Pointing Device..." (VRST \'25)' }
+                    'publications.txt': { type: 'file', content: 'S. Hubenschmid, J. Zagermann, <b>R. Erb</b>, et al.<br>"SpatialMouse: A Hybrid Pointing Device..." (VRST \'25)<br>DOI: 10.1145/3756884.3766047<br>Code: https://github.com/hcigroupkonstanz/SpatialMouse' }
                 },
                 '~/skills': {
-                    'skills.txt': { type: 'file', content: '<b>Languages:</b> Python, Java, C++, SQL, R<br><b>ML/AI:</b> PyTorch, Scikit-learn, Pandas' }
+                    'skills.txt': { type: 'file', content: '<b>Programming:</b> Python, Java, C, C++, SQL, R<br><b>ML &amp; data:</b> PyTorch, scikit-learn, pandas, OCR<br><b>Agentic coding:</b> OpenAI Codex, Claude Code, Antigravity<br><b>App development:</b> Vercel, Supabase, Cloudflare<br><b>Cloud &amp; tools:</b> Google Cloud Functions, Firestore, Git, Docker, Unity, CAD<br><b>Languages:</b> German (native), English (fluent), French (basic)' }
                 }
             };
         }
@@ -1585,7 +1721,7 @@
                     tabIndex = (tabIndex + 1) % tabMatches.length;
                 } else {
                     if (parts.length === 1 && !isTrailingSpace) {
-                        const cmds = ['help', 'clear', 'exit', 'ls', 'cd', 'cat', 'open', 'pwd', 'rm', 'rmdir', 'mkdir', 'nano', 'theme', 'history', 'weather', 'git', 'stop', 'test', 'hello', 'hallo', 'whoami', 'neofetch', 'say', 'date', 'echo'];
+                        const cmds = ['help', 'clear', 'exit', 'ls', 'cd', 'cat', 'open', 'pwd', 'rm', 'rmdir', 'mkdir', 'nano', 'theme', 'history', 'weather', 'git', 'stop', 'test', 'hello', 'hallo', 'whoami', 'neofetch', 'say', 'date', 'echo', 'roll', 'flip'];
                         tabMatches = cmds.filter(c => c.startsWith(searchPrefix));
                     } else if (cmd === 'cd' || cmd === 'rmdir') {
                         const dirs = Object.keys(fileSystem[cwd] || {}).filter(k => fileSystem[cwd][k].type === 'dir' && (!k.startsWith('.') || searchPrefix.startsWith('.')));
@@ -1595,7 +1731,7 @@
                         const allFiles = Object.keys(fileSystem[cwd] || {}).filter(f => !f.startsWith('.') || searchPrefix.startsWith('.'));
                         tabMatches = allFiles.filter(f => f.startsWith(searchPrefix));
                     } else if (cmd === 'open') {
-                        const targets = [...Object.keys(fileSystem[cwd] || {}).filter(f => !f.startsWith('.')), 'linkedin', 'mail'];
+                        const targets = [...Object.keys(fileSystem[cwd] || {}).filter(f => !f.startsWith('.')), 'linkedin', 'github', 'mail'];
                         tabMatches = targets.filter(t => t.startsWith(searchPrefix));
                     } else if (cmd === 'theme') {
                         const themes = ['light', 'dark', 'auto', 'hacker'];
@@ -1740,7 +1876,7 @@
 <div class="help-row"><div class="help-cmd">cd &lt;dir&gt;</div><div class="help-desc">Change directory</div></div>
 <div class="help-row"><div class="help-cmd">pwd</div><div class="help-desc">Print working directory</div></div>
 <div class="help-row"><div class="help-cmd">cat &lt;file&gt;</div><div class="help-desc">Read file contents</div></div>
-<div class="help-row"><div class="help-cmd">open &lt;target&gt;</div><div class="help-desc">Open cv.pdf, a section, linkedin or mail</div></div>
+<div class="help-row"><div class="help-cmd">open &lt;target&gt;</div><div class="help-desc">Open cv.pdf, a section, linkedin, github or mail</div></div>
 <div class="help-row"><div class="help-cmd">mkdir &lt;dir&gt;</div><div class="help-desc">Make a new directory</div></div>
 <div class="help-row"><div class="help-cmd">nano &lt;file&gt;</div><div class="help-desc">Edit or create text files</div></div>
 <div class="help-row"><div class="help-cmd">rm &lt;name&gt;</div><div class="help-desc">Remove file or directory (-rf supported)</div></div>
@@ -1749,6 +1885,7 @@
 <div class="help-row"><div class="help-cmd">whoami</div><div class="help-desc">Who is Robin?</div></div>
 <div class="help-row"><div class="help-cmd">neofetch</div><div class="help-desc">System information, portfolio edition</div></div>
 <div class="help-row"><div class="help-cmd">say &lt;text&gt;</div><div class="help-desc">Speak text aloud (like macOS say)</div></div>
+<div class="help-row"><div class="help-cmd">roll [n] · flip</div><div class="help-desc">Roll dice · flip a coin</div></div>
 <div class="help-row"><div class="help-cmd">date · echo</div><div class="help-desc">Print the date · print text</div></div>
 <div class="help-row"><div class="help-cmd">weather &lt;city&gt;</div><div class="help-desc">Check live weather</div></div>
 <div class="help-row"><div class="help-cmd">git</div><div class="help-desc">Version control simulation</div></div>
@@ -2110,10 +2247,13 @@
                     const target = (parts[1] || '').toLowerCase().replace(/\/$/, '');
                     const sections = ['about', 'experience', 'education', 'volunteering', 'publications', 'skills', 'cv'];
                     if (!target) {
-                        print('usage: open <cv.pdf | linkedin | mail | section>');
+                        print('usage: open <cv.pdf | linkedin | github | mail | section>');
                     } else if (target === 'cv.pdf') {
                         print('Opening cv.pdf…');
                         window.open('Robin_Erb_CV.pdf', '_blank');
+                    } else if (target === 'github') {
+                        print('Opening SpatialMouse on GitHub…');
+                        window.open('https://github.com/hcigroupkonstanz/SpatialMouse', '_blank');
                     } else if (target === 'linkedin') {
                         print('Opening LinkedIn…');
                         window.open('https://www.linkedin.com/in/robin-erb-134b9a328/', '_blank');
@@ -2140,7 +2280,7 @@
                         ['Studies', 'M.Sc. Data & Computer Science, Heidelberg University'],
                         ['Focus', 'Machine Learning'],
                         ['Thesis', 'RL + HPO for smaller, more efficient neural networks'],
-                        ['Work', 'Freelance Software Developer @ Campus Five'],
+                        ['Work', 'Freelance Software Developer @ campus.five'],
                         ['Theme', theme.charAt(0).toUpperCase() + theme.slice(1) + (window.themePref === 'auto' ? ' (auto)' : '')]
                     ];
                     const blocks = ['#ff453a', '#ff9f0a', '#ffd60a', '#30d158', '#64d2ff', '#0a84ff', '#bf5af2', '#ff375f']
@@ -2148,6 +2288,23 @@
                     printHTML(`<div><span class="p-user">robin</span>@<span class="p-dir">erb</span></div><div style="color:var(--term-muted)">-------------</div>` +
                         rows.map(([k, v]) => `<div><span class="nf-key">${k}:</span> ${escapeHTML(v)}</div>`).join('') +
                         `<div class="nf-blocks">${blocks}</div>`);
+                    break;
+                }
+                case 'roll':
+                case 'dice': {
+                    const n = Math.min(Math.max(parseInt(parts[1]) || 1, 1), 6);
+                    const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+                    const vals = Array.from({ length: n }, () => 1 + Math.floor(Math.random() * 6));
+                    const total = vals.reduce((a, b) => a + b, 0);
+                    printHTML(`<span style="font-size:1.9em;line-height:1.2;letter-spacing:0.15em">${vals.map(v => faces[v - 1]).join(' ')}</span>`);
+                    print(n === 1 ? `You rolled ${total}.` : `${vals.join(' + ')} = ${total}`);
+                    print('Tip: Spotlight → "Roll the Dice" for the 3D version.');
+                    break;
+                }
+                case 'flip':
+                case 'coin': {
+                    const heads = Math.random() < 0.5;
+                    printHTML(`<span style="font-size:1.6em">🪙</span>  <b>${heads ? 'Heads' : 'Tails'}!</b>`);
                     break;
                 }
                 case 'test': {
@@ -2361,7 +2518,7 @@
 
         const actionsData = [
             { id: 'about', title: 'About', icon: 'user', color: 'blue', group: 'Sections', desc: 'Section', keywords: 'go to bio profile', action: () => { window.location.hash = 'about'; } },
-            { id: 'experience', title: 'Experience', icon: 'briefcase', color: 'orange', group: 'Sections', desc: 'Section', keywords: 'go to work jobs campus five', action: () => { window.location.hash = 'experience'; } },
+            { id: 'experience', title: 'Experience', icon: 'briefcase', color: 'orange', group: 'Sections', desc: 'Section', keywords: 'go to work jobs campus.five campus five', action: () => { window.location.hash = 'experience'; } },
             { id: 'education', title: 'Education', icon: 'grad', color: 'indigo', group: 'Sections', desc: 'Section', keywords: 'go to university master thesis', action: () => { window.location.hash = 'education'; } },
             { id: 'volunteering', title: 'Volunteering', icon: 'heart', color: 'pink', group: 'Sections', desc: 'Section', keywords: 'go to bfd federal voluntary service', action: () => { window.location.hash = 'volunteering'; } },
             { id: 'publications', title: 'Publications', icon: 'book', color: 'orange', group: 'Sections', desc: 'Section', keywords: 'go to paper research spatialmouse', action: () => { window.location.hash = 'publications'; } },
@@ -2385,6 +2542,7 @@
             }},
             { id: 'send-email', title: 'Send Email', icon: 'mail', color: 'blue', group: 'Actions', desc: 'Mail', keywords: 'contact write', action: () => { window.location.href = 'mailto:robin.erb2000@gmail.com'; } },
             { id: 'linkedin', title: 'LinkedIn Profile', icon: 'link', color: 'linkedin', group: 'Actions', desc: 'Opens in new tab', keywords: 'social connect', action: () => window.open('https://www.linkedin.com/in/robin-erb-134b9a328/', '_blank') },
+            { id: 'spatialmouse-github', title: 'SpatialMouse on GitHub', icon: 'code', color: 'graphite', group: 'Actions', desc: 'Opens in new tab', keywords: 'source code repository publication hci', action: () => window.open('https://github.com/hcigroupkonstanz/SpatialMouse', '_blank') },
             { id: 'maps', title: 'Show Heidelberg in Maps', icon: 'pin', color: 'green', group: 'Actions', desc: 'Location', keywords: 'location where map', action: () => window.open('https://maps.google.com/?q=Heidelberg', '_blank') },
 
             { id: 'theme-light', title: 'Light Appearance', icon: 'sun', color: 'yellow', group: 'Appearance', desc: 'Theme', keywords: 'light mode day', action: () => setThemeFromUI('light') },
@@ -2396,14 +2554,8 @@
             { id: 'lang-da', title: 'Translate About to Danish', icon: 'globe', color: 'teal', group: 'Translate About', desc: 'Dansk', keywords: 'language', action: () => setAbout(aboutDA, false) },
             { id: 'lang-en', title: 'Translate About to English', icon: 'globe', color: 'teal', group: 'Translate About', desc: 'English', keywords: 'language', action: () => setAbout(aboutEN, true) },
 
-            { id: 'flip-coin', title: 'Flip a Coin', icon: 'coin', color: 'yellow', group: 'Fun', desc: 'Game', keepOpen: true, action: function (itemEl) {
-                flashResult(itemEl, Math.random() > 0.5 ? 'Heads!' : 'Tails!', 'star');
-                setTimeout(() => { if (spotlightActive) window.toggleSpotlight(); }, 1500);
-            }},
-            { id: 'roll-dice', title: 'Roll a Die', icon: 'dice', color: 'red', group: 'Fun', desc: 'Game', keepOpen: true, keywords: 'dice', action: function (itemEl) {
-                flashResult(itemEl, 'You rolled a ' + (Math.floor(Math.random() * 6) + 1) + '!', 'star');
-                setTimeout(() => { if (spotlightActive) window.toggleSpotlight(); }, 1500);
-            }},
+            { id: 'flip-coin', title: 'Flip a Coin', icon: 'coin', color: 'yellow', group: 'Fun', desc: 'Game', keywords: 'heads tails toss', action: () => window.playGame('coin') },
+            { id: 'roll-dice', title: 'Roll the Dice', icon: 'dice', color: 'red', group: 'Fun', desc: 'Game', keywords: 'die dice wuerfel', action: () => window.playGame('dice') },
             { id: 'confetti', title: 'Celebrate!', icon: 'star', color: 'purple', group: 'Fun', desc: 'Confetti', keywords: 'party easter egg', action: () => window.triggerConfetti() }
         ];
 
@@ -2416,7 +2568,7 @@
                 spotlightOverlay.classList.add('active');
                 spotlightInput.value = '';
                 renderSpotlightResults('');
-                setTimeout(() => spotlightInput.focus(), 50);
+                spotlightInput.focus(); // focus immediately so fast typing after ⌘K is not lost
             } else {
                 spotlightOverlay.classList.remove('active');
                 spotlightInput.blur();
@@ -2633,13 +2785,174 @@
                 e.preventDefault();
                 window.toggleSpotlight();
             } else if (e.key === 'Escape') {
-                if (spotlightActive) {
+                if (gameType) {
+                    closeGame();
+                } else if (spotlightActive) {
                     window.toggleSpotlight();
                 } else if (isTerminalOpen() && !window.inVim && !window.inNano) {
                     window.closeTerminal();
                 } else if (!window.inVim && !window.inNano && !isTerminalOpen()) {
                     window.toggleSpotlight();
                 }
+            }
+        });
+
+        // ---------------------------------------------------------
+        // Games HUD: 3D dice and coin with stats
+        // ---------------------------------------------------------
+        const gameOverlay = document.getElementById('game-overlay');
+        const gameStage = document.getElementById('game-stage');
+        const gameTitleEl = document.getElementById('game-title');
+        const gameResultEl = document.getElementById('game-result');
+        const gameStatsEl = document.getElementById('game-stats');
+        const gameAgain = document.getElementById('game-again');
+        const diceCountEl = document.getElementById('dice-count');
+        const gameReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        let gameType = null;
+        let gameBusy = false;
+        let diceN = 1;
+        const coinStats = { heads: 0, tails: 0, streak: 0, last: null };
+        let diceStats = { rolls: 0, sum: 0 };
+
+        const PIPS = { 1: ['c'], 2: ['tl', 'br'], 3: ['tl', 'c', 'br'], 4: ['tl', 'tr', 'bl', 'br'], 5: ['tl', 'tr', 'c', 'bl', 'br'], 6: ['tl', 'tr', 'ml', 'mr', 'bl', 'br'] };
+        const FACE_ROT = { 1: [0, 0], 2: [90, 0], 3: [0, -90], 4: [0, 90], 5: [-90, 0], 6: [0, 180] }; // [rotateX, rotateY] that brings face n to the front
+
+        const dieHTML = () => `<div class="game-piece die-piece"><div class="toss"><div class="die" data-rx="0" data-ry="0">` +
+            [1, 2, 3, 4, 5, 6].map(n => `<div class="die-face f${n}">${PIPS[n].map(p => `<span class="pip p-${p}"></span>`).join('')}</div>`).join('') +
+            `</div></div><div class="piece-shadow"></div></div>`;
+        const coinHTML = () => `<div class="game-piece coin-piece"><div class="toss"><div class="coin" data-ry="0">` +
+            `<div class="coin-face front"><span>RE</span><small>HEADS</small></div>` +
+            `<div class="coin-face back"><span>★</span><small>TAILS</small></div>` +
+            `</div></div><div class="piece-shadow"></div></div>`;
+
+        function renderGameStage() {
+            gameStage.innerHTML = gameType === 'coin' ? coinHTML() : Array.from({ length: diceN }, dieHTML).join('');
+        }
+        function nextTurn(current, extraTurns, offset) {
+            return Math.ceil(current / 360) * 360 + extraTurns * 360 + offset;
+        }
+        function restartToss(piece, delay) {
+            piece.style.animationDelay = '';
+            piece.querySelectorAll('.toss, .piece-shadow').forEach(el => { el.style.animationDelay = delay + 'ms'; });
+            piece.classList.remove('tossing');
+            void piece.offsetWidth;
+            piece.classList.add('tossing');
+        }
+        function coinStatsText() {
+            let t = `Heads ${coinStats.heads} · Tails ${coinStats.tails}`;
+            if (coinStats.streak >= 2) t += ` · ${coinStats.streak}× in a row`;
+            return t;
+        }
+        function diceStatsText() {
+            return diceStats.rolls ? `${diceStats.rolls} ${diceStats.rolls === 1 ? 'roll' : 'rolls'} · average ${(diceStats.sum / diceStats.rolls).toFixed(1)}` : '';
+        }
+        function showGameResult(text, stats) {
+            gameResultEl.textContent = text;
+            gameResultEl.classList.remove('pop');
+            void gameResultEl.offsetWidth;
+            gameResultEl.classList.add('pop');
+            gameStatsEl.textContent = stats;
+            gameBusy = false;
+            gameAgain.disabled = false;
+            if (gameType) gameAgain.focus();
+        }
+
+        function playRound() {
+            if (gameBusy || !gameType) return;
+            gameBusy = true;
+            gameAgain.disabled = true;
+            gameResultEl.classList.remove('pop');
+            gameResultEl.innerHTML = '&nbsp;';
+            if (navigator.vibrate) navigator.vibrate(10);
+
+            if (gameType === 'coin') {
+                const heads = Math.random() < 0.5;
+                const coin = gameStage.querySelector('.coin');
+                const ry = nextTurn(parseFloat(coin.dataset.ry), 4 + Math.floor(Math.random() * 2), heads ? 0 : 180);
+                coin.dataset.ry = ry;
+                coin.style.transform = `rotateY(${ry}deg)`;
+                restartToss(gameStage.querySelector('.game-piece'), 0);
+                setTimeout(() => {
+                    const side = heads ? 'heads' : 'tails';
+                    coinStats[side]++;
+                    coinStats.streak = coinStats.last === side ? coinStats.streak + 1 : 1;
+                    coinStats.last = side;
+                    showGameResult(heads ? 'Heads' : 'Tails', coinStatsText());
+                }, gameReducedMotion ? 50 : 1300);
+            } else {
+                const values = [];
+                gameStage.querySelectorAll('.game-piece').forEach((piece, i) => {
+                    const die = piece.querySelector('.die');
+                    const v = 1 + Math.floor(Math.random() * 6);
+                    values.push(v);
+                    const [fx, fy] = FACE_ROT[v];
+                    const rx = nextTurn(parseFloat(die.dataset.rx), 2 + Math.floor(Math.random() * 2), fx);
+                    const ry = nextTurn(parseFloat(die.dataset.ry), 2 + Math.floor(Math.random() * 2), fy);
+                    const rz = Math.round(Math.random() * 30 - 15);
+                    die.dataset.rx = rx;
+                    die.dataset.ry = ry;
+                    die.style.transitionDelay = (i * 90) + 'ms';
+                    die.style.transform = `rotateZ(${rz}deg) rotateX(${rx}deg) rotateY(${ry}deg)`;
+                    restartToss(piece, i * 90);
+                });
+                setTimeout(() => {
+                    const total = values.reduce((a, b) => a + b, 0);
+                    diceStats.rolls++;
+                    diceStats.sum += total;
+                    let text = values.length === 1 ? `You rolled ${total}` : `${values.join(' + ')} = ${total}`;
+                    if (values.length > 1 && values.every(v => v === values[0])) text += values[0] === 6 ? ' · Double six!' : ' · Doubles!';
+                    showGameResult(text, diceStatsText());
+                    if (values.length > 1 && values.every(v => v === 6)) window.triggerConfetti();
+                }, gameReducedMotion ? 50 : 1100 + (values.length - 1) * 90);
+            }
+        }
+
+        function setDiceCount(n) {
+            if (gameBusy || n === diceN) return;
+            diceN = n;
+            diceStats = { rolls: 0, sum: 0 };
+            diceCountEl.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.n) === n)));
+            renderGameStage();
+            gameStatsEl.textContent = '';
+            setTimeout(playRound, 60);
+        }
+
+        window.playGame = function (type) {
+            gameType = type === 'coin' ? 'coin' : 'dice';
+            gameBusy = false;
+            gameTitleEl.textContent = gameType === 'coin' ? 'Flip a Coin' : 'Roll the Dice';
+            gameAgain.textContent = gameType === 'coin' ? 'Flip Again' : 'Roll Again';
+            diceCountEl.hidden = gameType === 'coin';
+            renderGameStage();
+            gameResultEl.innerHTML = '&nbsp;';
+            gameStatsEl.textContent = gameType === 'coin' ? (coinStats.heads + coinStats.tails ? coinStatsText() : '') : diceStatsText();
+            gameOverlay.classList.add('active');
+            gameOverlay.setAttribute('aria-hidden', 'false');
+            gameAgain.focus();
+            setTimeout(playRound, 280);
+        };
+
+        function closeGame() {
+            if (!gameType) return;
+            gameType = null;
+            gameOverlay.classList.remove('active');
+            gameOverlay.setAttribute('aria-hidden', 'true');
+            gameAgain.blur();
+            if (isTerminalOpen()) input.focus();
+        }
+
+        gameAgain.addEventListener('click', playRound);
+        document.getElementById('game-close').addEventListener('click', closeGame);
+        gameOverlay.addEventListener('click', (e) => { if (e.target === gameOverlay) closeGame(); });
+        diceCountEl.addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-n]');
+            if (btn) setDiceCount(Number(btn.dataset.n));
+        });
+        gameOverlay.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !(e.target.closest && e.target.closest('button'))) {
+                e.preventDefault();
+                playRound();
             }
         });
 

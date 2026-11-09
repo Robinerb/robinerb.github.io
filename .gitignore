@@ -1,0 +1,6 @@
+# Local CV sources and drafts (not published)
+output/
+Robin_Erb_CV_V*.pdf
+
+# macOS
+.DS_Store
